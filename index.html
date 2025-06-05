@@ -6,22 +6,20 @@
     <title>Spiritual Books Reading Progress Tracker</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 10px;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
         }
-        
         .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
-        
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -29,24 +27,16 @@
             text-align: center;
             position: relative;
         }
-        
         .header h1 {
             margin: 0;
             font-size: 1.8em;
             font-weight: 300;
         }
-        
-        .header p {
-            margin: 10px 0 0 0;
-            opacity: 0.9;
-            font-size: 1em;
-        }
-        
         .sync-status {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.8em;
@@ -54,36 +44,26 @@
             align-items: center;
             gap: 6px;
         }
-        
         .sync-indicator {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background: #ff6b6b;
         }
-        
-        .sync-indicator.connected {
-            background: #51cf66;
-        }
-        
+        .sync-indicator.connected { background: #51cf66; }
         .setup-panel {
             background: #f8f9fa;
             padding: 15px;
             border-bottom: 1px solid #e9ecef;
             display: none;
         }
-        
-        .setup-panel.show {
-            display: block;
-        }
-        
+        .setup-panel.show { display: block; }
         .setup-form {
             display: flex;
             gap: 10px;
             align-items: center;
             flex-wrap: wrap;
         }
-        
         .setup-input {
             flex: 1;
             min-width: 250px;
@@ -92,7 +72,6 @@
             border-radius: 8px;
             font-size: 14px;
         }
-        
         .setup-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -104,38 +83,14 @@
             transition: transform 0.2s ease;
             font-size: 14px;
         }
-        
-        .setup-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .setup-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .setup-instructions {
-            margin-top: 15px;
-            padding: 15px;
-            background: #e3f2fd;
-            border-radius: 8px;
-            font-size: 0.85em;
-            line-height: 1.4;
-        }
-        
-        .table-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
+        .setup-btn:hover { transform: translateY(-2px); }
+        .table-container { overflow-x: auto; }
         .tracker-table {
             width: 100%;
             min-width: 800px;
             border-collapse: collapse;
             background: white;
         }
-        
         .tracker-table th {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
@@ -143,45 +98,39 @@
             text-align: left;
             font-weight: 600;
             font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
         }
-        
         .tracker-table td {
             padding: 12px 8px;
             border-bottom: 1px solid #eee;
             vertical-align: middle;
         }
-        
-        .tracker-table tr:hover {
-            background: #f8f9ff;
-        }
-        
         .book-name {
             font-weight: 600;
             color: #2c3e50;
             max-width: 180px;
             word-wrap: break-word;
-            font-size: 0.9em;
         }
-        
-        .goal-input, .completed-input {
-            width: 50px;
+        .goal-display {
+            font-weight: 600;
+            color: #7f8c8d;
+            text-align: center;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .completed-input {
+            width: 60px;
             padding: 6px;
             border: 2px solid #e1e8ed;
             border-radius: 6px;
             text-align: center;
             font-size: 14px;
-            transition: border-color 0.3s ease;
         }
-        
-        .goal-input:focus, .completed-input:focus {
+        .completed-input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
         }
-        
         .progress-bar {
             font-family: monospace;
             font-size: 14px;
@@ -189,14 +138,12 @@
             color: #27ae60;
             min-width: 200px;
         }
-        
         .percentage {
             font-weight: 600;
             font-size: 14px;
             color: #2c3e50;
             min-width: 50px;
         }
-        
         .notes-input {
             width: 100%;
             max-width: 150px;
@@ -204,66 +151,79 @@
             border: 2px solid #e1e8ed;
             border-radius: 6px;
             font-size: 13px;
-            resize: vertical;
-            min-height: 30px;
         }
-        
-        .notes-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
-        }
-        
-        .completed-row {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-        }
-        
-        .in-progress-row {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-        }
-        
+        .completed-row { background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); }
+        .in-progress-row { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); }
         .summary {
             padding: 20px;
             background: #f8f9fa;
             border-top: 3px solid #667eea;
         }
-        
-        .summary h3 {
-            margin: 0 0 15px 0;
-            color: #2c3e50;
-            font-size: 1.3em;
-        }
-        
         .summary-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 15px;
         }
-        
         .stat-card {
             background: white;
             padding: 15px;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border-left: 4px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        
         .stat-value {
             font-size: 1.8em;
             font-weight: 700;
             color: #667eea;
             margin: 0;
         }
-        
         .stat-label {
             color: #7f8c8d;
             margin: 5px 0 0 0;
             font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-        
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 15px;
+            font-size: 0.9em;
+        }
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .toggle-setup {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        .sync-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .sync-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
         .last-updated {
             text-align: center;
             padding: 15px;
@@ -272,169 +232,12 @@
             background: #f8f9fa;
             font-size: 0.85em;
         }
-        
         .loading {
             text-align: center;
             padding: 30px;
             color: #667eea;
             font-size: 1em;
-        }
-        
-        .message {
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin: 15px;
-            font-size: 0.9em;
-        }
-        
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        
-        .toggle-setup {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85em;
-            margin-top: 10px;
-        }
-        
-        .toggle-setup:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
-        .sync-actions {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .sync-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 0.8em;
-        }
-        
-        .sync-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
-        /* Mobile Styles */
-        @media (max-width: 768px) {
-            body {
-                padding: 5px;
-            }
-            
-            .header {
-                padding: 15px 10px;
-            }
-            
-            .header h1 {
-                font-size: 1.5em;
-            }
-            
-            .sync-status {
-                position: static;
-                margin-top: 10px;
-                justify-content: center;
-                font-size: 0.75em;
-            }
-            
-            .setup-form {
-                flex-direction: column;
-            }
-            
-            .setup-input {
-                min-width: auto;
-                width: 100%;
-            }
-            
-            .setup-btn {
-                width: 100%;
-                margin: 5px 0;
-            }
-            
-            .tracker-table {
-                min-width: 700px;
-                font-size: 13px;
-            }
-            
-            .tracker-table th,
-            .tracker-table td {
-                padding: 8px 4px;
-            }
-            
-            .book-name {
-                max-width: 120px;
-                font-size: 0.8em;
-            }
-            
-            .goal-input, .completed-input {
-                width: 40px;
-                padding: 4px;
-                font-size: 12px;
-            }
-            
-            .progress-bar {
-                font-size: 12px;
-                min-width: 150px;
-            }
-            
-            .notes-input {
-                max-width: 100px;
-                font-size: 12px;
-                min-height: 25px;
-            }
-            
-            .summary-stats {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-            
-            .stat-card {
-                padding: 10px;
-            }
-            
-            .stat-value {
-                font-size: 1.5em;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 1.3em;
-            }
-            
-            .summary-stats {
-                grid-template-columns: 1fr;
-            }
-            
-            .sync-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .sync-btn {
-                width: auto;
-                min-width: 120px;
-            }
+            display: none;
         }
     </style>
 </head>
@@ -449,117 +252,50 @@
             </div>
             <button class="toggle-setup" onclick="toggleSetup()">Setup Google Sheets Sync</button>
             <div class="sync-actions">
-                <button class="sync-btn" onclick="forceSync()" id="force-sync-btn" style="display: none;">🔄 Force Sync</button>
-                <button class="sync-btn" onclick="clearData()" id="clear-data-btn">🗑️ Clear All Data</button>
+                <button class="sync-btn" onclick="loadFromSheet()" id="load-btn" style="display: none">🔄 Load from Sheet</button>
+                <button class="sync-btn" onclick="clearData()">🗑️ Clear All Data</button>
             </div>
         </div>
-        
+
         <div class="setup-panel" id="setup-panel">
             <div class="setup-form">
                 <input type="text" class="setup-input" id="sheet-url" placeholder="Paste your Google Sheets URL here...">
-                <button class="setup-btn" onclick="connectSheet()" id="connect-btn">Connect</button>
-                <button class="setup-btn" onclick="createNewSheet()" id="create-btn">Create New Sheet</button>
+                <button class="setup-btn" onclick="connectSheet()">Connect</button>
             </div>
-            <div class="setup-instructions">
-                <strong>📱 Mobile-Friendly Setup:</strong><br>
-                1. <strong>Easy Option:</strong> Click "Create New Sheet" to get a template<br>
-                2. <strong>Manual Option:</strong> Create a Google Sheet with columns: Book Name | Goal | Completed | Notes<br>
-                3. <strong>Important:</strong> Make it public (Anyone with link can edit)<br>
-                4. Paste the URL above and click "Connect"<br>
-                5. Your data will sync perfectly across all devices! 📱💻
+            <div style="margin-top: 15px; padding: 15px; background: #e3f2fd; border-radius: 8px; font-size: 0.85em;">
+                <strong>Setup Instructions:</strong><br>
+                1. Create a Google Sheet with columns: Book Name | Goal | Completed | Notes<br>
+                2. Make sure it's public (Anyone with link can view)<br>
+                3. Paste the URL above and click Connect<br>
+                4. <strong>Important:</strong> Goals can only be edited in Google Sheets, not here!
             </div>
         </div>
-        
-        <div id="loading" class="loading" style="display: none;">
-            🔄 Syncing with Google Sheets...
-        </div>
-        
+
+        <div id="loading" class="loading">🔄 Loading from Google Sheets...</div>
+
         <div class="table-container">
-            <table class="tracker-table" id="main-table">
+            <table class="tracker-table">
                 <thead>
                     <tr>
                         <th>Book Name</th>
                         <th>Goal</th>
-                        <th>Done</th>
+                        <th>Completed</th>
                         <th>Progress Bar</th>
                         <th>%</th>
                         <th>Notes</th>
                     </tr>
                 </thead>
                 <tbody id="tracker-body">
-                    <tr data-book="0">
-                        <td class="book-name">Bhagavad Gita As It Is</td>
-                        <td><input type="number" class="goal-input" value="100" min="1"></td>
-                        <td><input type="number" class="completed-input" value="0" min="0"></td>
-                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                        <td class="percentage">0%</td>
-                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
-                    </tr>
-                    <tr data-book="1">
-                        <td class="book-name">Srimad Bhagavatam</td>
-                        <td><input type="number" class="goal-input" value="20" min="1"></td>
-                        <td><input type="number" class="completed-input" value="0" min="0"></td>
-                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                        <td class="percentage">0%</td>
-                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
-                    </tr>
-                    <tr data-book="2">
-                        <td class="book-name">Sri Chaitanya Charitamrita</td>
-                        <td><input type="number" class="goal-input" value="15" min="1"></td>
-                        <td><input type="number" class="completed-input" value="0" min="0"></td>
-                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                        <td class="percentage">0%</td>
-                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
-                    </tr>
-                    <tr data-book="3">
-                        <td class="book-name">Krishna Book</td>
-                        <td><input type="number" class="goal-input" value="25" min="1"></td>
-                        <td><input type="number" class="completed-input" value="0" min="0"></td>
-                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                        <td class="percentage">0%</td>
-                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
-                    </tr>
-                    <tr data-book="4">
-                        <td class="book-name">Prabhupada Lilamrita</td>
-                        <td><input type="number" class="goal-input" value="10" min="1"></td>
-                        <td><input type="number" class="completed-input" value="0" min="0"></td>
-                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                        <td class="percentage">0%</td>
-                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
-                    </tr>
-                    <tr data-book="5">
-                        <td class="book-name">Small Books Collection</td>
-                        <td><input type="number" class="goal-input" value="50" min="1"></td>
-                        <td><input type="number" class="completed-input" value="0" min="0"></td>
-                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                        <td class="percentage">0%</td>
-                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
-                    </tr>
-                    <tr data-book="6">
-                        <td class="book-name">Nectar of Devotion</td>
-                        <td><input type="number" class="goal-input" value="12" min="1"></td>
-                        <td><input type="number" class="completed-input" value="0" min="0"></td>
-                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                        <td class="percentage">0%</td>
-                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
-                    </tr>
-                    <tr data-book="7">
-                        <td class="book-name">Nectar of Instruction</td>
-                        <td><input type="number" class="goal-input" value="30" min="1"></td>
-                        <td><input type="number" class="completed-input" value="0" min="0"></td>
-                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                        <td class="percentage">0%</td>
-                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
-                    </tr>
+                    <!-- Default books will be loaded here -->
                 </tbody>
             </table>
         </div>
-        
+
         <div class="summary">
             <h3>📊 Reading Summary</h3>
             <div class="summary-stats">
                 <div class="stat-card">
-                    <div class="stat-value" id="total-books">8</div>
+                    <div class="stat-value" id="total-books">0</div>
                     <div class="stat-label">Total Books</div>
                 </div>
                 <div class="stat-card">
@@ -576,681 +312,361 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="last-updated">
             Last synced: <span id="last-sync">Never</span> | 
-            Updated: <span id="current-date"></span>
+            <span id="current-date"></span>
         </div>
     </div>
 
     <script>
-        let SHEET_URL = '';
+        let SHEET_URL = "";
         let isConnected = false;
-        let syncTimeout;
-        let lastKnownData = '';
-        
-        // Set current date
-        document.getElementById('current-date').textContent = new Date().toLocaleDateString();
-        
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
+        let autoSaveTimeout;
+
+        // Default books data
+        const defaultBooks = [
+            { name: "Bhagavad Gita As It Is", goal: 100, completed: 0, notes: "" },
+            { name: "Srimad Bhagavatam", goal: 20, completed: 0, notes: "" },
+            { name: "Sri Chaitanya Charitamrita", goal: 15, completed: 0, notes: "" },
+            { name: "Krishna Book", goal: 25, completed: 0, notes: "" },
+            { name: "Prabhupada Lilamrita", goal: 10, completed: 0, notes: "" },
+            { name: "Small Books Collection", goal: 50, completed: 0, notes: "" },
+            { name: "Nectar of Devotion", goal: 12, completed: 0, notes: "" },
+            { name: "Nectar of Instruction", goal: 30, completed: 0, notes: "" }
+        ];
+
+        // Initialize app
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("current-date").textContent = new Date().toLocaleDateString();
             loadSheetConfig();
-            loadFromStorage();
+            loadDefaultBooks();
             setupEventListeners();
             
-            // Initial update
-            const rows = document.querySelectorAll('#tracker-body tr');
-            rows.forEach(updateRow);
-            
-            // Auto-sync if sheet is configured
             if (SHEET_URL) {
-                setTimeout(checkConnection, 1000);
-                // Set up periodic sync
-                setInterval(checkConnection, 30000); // Sync every 30 seconds
+                loadFromSheet();
+                setInterval(loadFromSheet, 60000); // Auto-sync every minute
             }
         });
-        
-        // Load saved sheet URL
-        function loadSheetConfig() {
-            const savedUrl = getStorageItem('sheetUrl');
-            if (savedUrl) {
-                SHEET_URL = savedUrl;
-                document.getElementById('sheet-url').value = savedUrl;
-                document.getElementById('force-sync-btn').style.display = 'inline-block';
-            }
-        }
-        
-        // Storage wrapper (works in Claude.ai environment)
+
+        // Storage functions that work in Claude.ai
         function setStorageItem(key, value) {
             try {
-                // Try localStorage first
-                localStorage.setItem(key, value);
-            } catch (e) {
-                // Fallback to in-memory storage
                 window.memoryStorage = window.memoryStorage || {};
                 window.memoryStorage[key] = value;
+            } catch (e) {
+                console.error("Storage error:", e);
             }
         }
-        
+
         function getStorageItem(key) {
             try {
-                return localStorage.getItem(key);
-            } catch (e) {
                 window.memoryStorage = window.memoryStorage || {};
                 return window.memoryStorage[key] || null;
+            } catch (e) {
+                return null;
             }
         }
-        
+
+        // Load saved sheet configuration
+        function loadSheetConfig() {
+            const savedUrl = getStorageItem("sheetUrl");
+            if (savedUrl) {
+                SHEET_URL = savedUrl;
+                document.getElementById("sheet-url").value = savedUrl;
+                document.getElementById("load-btn").style.display = "inline-block";
+                updateSyncStatus(true, "Ready to Sync");
+            }
+        }
+
+        // Load default books into table
+        function loadDefaultBooks() {
+            const tbody = document.getElementById("tracker-body");
+            tbody.innerHTML = "";
+            
+            defaultBooks.forEach((book, index) => {
+                createBookRow(book.name, book.goal, book.completed, book.notes, index);
+            });
+            
+            updateSummary();
+        }
+
+        // Create a book row
+        function createBookRow(bookName, goal, completed, notes, index) {
+            const tbody = document.getElementById("tracker-body");
+            const row = document.createElement("tr");
+            row.setAttribute("data-book", index);
+
+            row.innerHTML = `
+                <td class="book-name">${bookName}</td>
+                <td class="goal-display">${goal}</td>
+                <td><input type="number" class="completed-input" value="${completed}" min="0" max="${goal}"></td>
+                <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                <td class="percentage">0%</td>
+                <td><input type="text" class="notes-input" placeholder="Notes..." value="${notes}"></td>
+            `;
+
+            tbody.appendChild(row);
+            updateRow(row);
+        }
+
+        // Update progress for a row
+        function updateRow(row) {
+            const goalDisplay = row.querySelector(".goal-display");
+            const completedInput = row.querySelector(".completed-input");
+            const progressBar = row.querySelector(".progress-bar");
+            const percentage = row.querySelector(".percentage");
+
+            const goal = parseInt(goalDisplay.textContent) || 0;
+            const completed = parseInt(completedInput.value) || 0;
+
+            // Ensure completed doesn't exceed goal
+            if (completed > goal) {
+                completedInput.value = goal;
+            }
+
+            const actualCompleted = Math.min(completed, goal);
+            const progress = goal > 0 ? actualCompleted / goal : 0;
+            const progressPercent = Math.round(progress * 100);
+
+            // Update progress bar
+            const filledBlocks = Math.round(progress * 20);
+            const emptyBlocks = 20 - filledBlocks;
+            progressBar.textContent = "█".repeat(filledBlocks) + "░".repeat(emptyBlocks);
+
+            // Update percentage
+            percentage.textContent = progressPercent + "%";
+
+            // Update row styling
+            row.className = "";
+            if (progressPercent === 100) {
+                row.classList.add("completed-row");
+            } else if (progressPercent > 0) {
+                row.classList.add("in-progress-row");
+            }
+
+            updateSummary();
+        }
+
+        // Update summary statistics
+        function updateSummary() {
+            const rows = document.querySelectorAll("#tracker-body tr");
+            let totalBooks = rows.length;
+            let completedBooks = 0;
+            let totalReadings = 0;
+            let totalProgress = 0;
+
+            rows.forEach(row => {
+                const goal = parseInt(row.querySelector(".goal-display").textContent) || 0;
+                const completed = parseInt(row.querySelector(".completed-input").value) || 0;
+                const progress = goal > 0 ? Math.min(completed, goal) / goal : 0;
+
+                totalReadings += Math.min(completed, goal);
+                totalProgress += progress * 100;
+
+                if (progress === 1) {
+                    completedBooks++;
+                }
+            });
+
+            const avgProgress = totalBooks > 0 ? Math.round(totalProgress / totalBooks) : 0;
+
+            document.getElementById("total-books").textContent = totalBooks;
+            document.getElementById("completed-books").textContent = completedBooks;
+            document.getElementById("total-readings").textContent = totalReadings;
+            document.getElementById("avg-progress").textContent = avgProgress + "%";
+        }
+
         // Toggle setup panel
         function toggleSetup() {
-            const panel = document.getElementById('setup-panel');
-            panel.classList.toggle('show');
+            const panel = document.getElementById("setup-panel");
+            panel.classList.toggle("show");
         }
-        
-        // Connect to existing sheet
+
+        // Connect to Google Sheet
         async function connectSheet() {
-            const url = document.getElementById('sheet-url').value.trim();
+            const url = document.getElementById("sheet-url").value.trim();
+            
             if (!url) {
-                showMessage('Please enter a Google Sheets URL', 'error');
+                showMessage("Please enter a Google Sheets URL", "error");
                 return;
             }
-            
-            // Validate and clean URL
-            if (!url.includes('docs.google.com/spreadsheets')) {
-                showMessage('Please enter a valid Google Sheets URL', 'error');
+
+            if (!url.includes("docs.google.com/spreadsheets")) {
+                showMessage("Please enter a valid Google Sheets URL", "error");
                 return;
             }
-            
+
             SHEET_URL = url;
-            setStorageItem('sheetUrl', SHEET_URL);
+            setStorageItem("sheetUrl", SHEET_URL);
             
-            showMessage('Connecting to Google Sheets...', 'success');
+            showMessage("Connecting to Google Sheets...", "success");
             
             try {
                 await loadFromSheet();
-                showMessage('Successfully connected! Data synced from Google Sheets.', 'success');
-                document.getElementById('setup-panel').classList.remove('show');
-                document.getElementById('force-sync-btn').style.display = 'inline-block';
+                showMessage("Successfully connected! Data loaded from Google Sheets.", "success");
+                document.getElementById("setup-panel").classList.remove("show");
+                document.getElementById("load-btn").style.display = "inline-block";
+                updateSyncStatus(true, "Connected");
+            } catch (error) {
+                showMessage("Connection failed. Make sure the sheet is publicly viewable.", "error");
+                console.error("Connection error:", error);
+                updateSyncStatus(false, "Connection Failed");
             }
-            
-             catch (error) {
-                showMessage('Connection failed. Make sure the sheet is public and editable.', 'error');
-                console.error('Connection error:', error);
+        }
+
+        // Load data from Google Sheets
+        async function loadFromSheet() {
+            if (!SHEET_URL) return;
+
+            try {
+                document.getElementById("loading").style.display = "block";
+                updateSyncStatus(true, "Loading...");
+
+                const csvUrl = getSheetCsvUrl();
+                const response = await fetch(csvUrl);
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch sheet data");
+                }
+
+                const csvText = await response.text();
+                const rows = csvText.split("\n").slice(1); // Skip header row
+
+                // Clear existing rows
+                const tbody = document.getElementById("tracker-body");
+                tbody.innerHTML = "";
+
+                // Create rows from sheet data
+                rows.forEach((row, index) => {
+                    if (row && row.trim()) {
+                        const cells = parseCSVRow(row);
+                        if (cells.length >= 4) {
+                            createBookRow(
+                                cells[0] || `Book ${index + 1}`, 
+                                parseInt(cells[1]) || 0, 
+                                parseInt(cells[2]) || 0, 
+                                cells[3] || "", 
+                                index
+                            );
+                        }
+                    }
+                });
+
+                updateSyncStatus(true, "Synced");
+                document.getElementById("last-sync").textContent = new Date().toLocaleTimeString();
+                
+            } catch (error) {
+                console.error("Error loading from sheet:", error);
+                updateSyncStatus(false, "Sync Error");
+                showMessage("Failed to load from Google Sheets. Check the URL and permissions.", "error");
+            } finally {
+                document.getElementById("loading").style.display = "none";
             }
-            // Check if Web App is configured
-const webAppUrl = getStorageItem('webAppUrl');
-if (!webAppUrl) {
-    showMessage('Connected for reading. Set up Google Apps Script Web App for two-way sync.', 'success');
-    showWebAppSetupInstructions();
-}
         }
-        
-        // Create new sheet
-        function createNewSheet() {
-            // Create a template URL that will help users create the right format
-            const templateData = [
-                ['Book Name', 'Goal', 'Completed', 'Notes'],
-                ['Bhagavad Gita As It Is', '100', '0', ''],
-                ['Srimad Bhagavatam', '20', '0', ''],
-                ['Sri Chaitanya Charitamrita', '15', '0', ''],
-                ['Krishna Book', '25', '0', ''],
-                ['Prabhupada Lilamrita', '10', '0', ''],
-                ['Small Books Collection', '50', '0', ''],
-                ['Nectar of Devotion', '12', '0', ''],
-                ['Nectar of Instruction', '30', '0', '']
-            ];
-            
-            // Open Google Sheets
-            window.open('https://docs.google.com/spreadsheets/create', '_blank');
-            showMessage('Create a new Google Sheet with the book data, make it public (Anyone with link can edit), then paste the URL above.', 'success');
+
+        // Get Google Sheets CSV URL
+        function getSheetCsvUrl() {
+            const match = SHEET_URL.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+            if (!match) return "";
+            const sheetId = match[1];
+            return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0`;
         }
-        
+
+        // Parse CSV row (handles quoted values)
+        function parseCSVRow(row) {
+            const result = [];
+            let current = "";
+            let inQuotes = false;
+
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === "," && !inQuotes) {
+                    result.push(current.trim());
+                    current = "";
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current.trim());
+            return result;
+        }
+
+        // Auto-save data locally
+        function autoSaveData() {
+            clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                const data = [];
+                document.querySelectorAll("#tracker-body tr").forEach(row => {
+                    const bookName = row.querySelector(".book-name").textContent;
+                    const goal = row.querySelector(".goal-display").textContent;
+                    const completed = row.querySelector(".completed-input").value;
+                    const notes = row.querySelector(".notes-input").value;
+                    data.push({ bookName, goal, completed, notes });
+                });
+                setStorageItem("trackerData", JSON.stringify(data));
+            }, 1000);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.addEventListener("input", function(e) {
+                if (e.target.matches(".completed-input, .notes-input")) {
+                    const row = e.target.closest("tr");
+                    updateRow(row);
+                    autoSaveData();
+                }
+            });
+        }
+
+        // Update sync status
+        function updateSyncStatus(connected, text) {
+            isConnected = connected;
+            const indicator = document.getElementById("sync-indicator");
+            const syncText = document.getElementById("sync-text");
+
+            if (connected) {
+                indicator.classList.add("connected");
+                syncText.textContent = text || "Connected";
+            } else {
+                indicator.classList.remove("connected");
+                syncText.textContent = text || "Not Connected";
+            }
+        }
+
         // Show messages
         function showMessage(message, type) {
-            const existingMessages = document.querySelectorAll('.message');
+            const existingMessages = document.querySelectorAll(".message");
             existingMessages.forEach(msg => msg.remove());
-            
-            const messageDiv = document.createElement('div');
+
+            const messageDiv = document.createElement("div");
             messageDiv.className = `message ${type}-message`;
             messageDiv.textContent = message;
-            
-            document.querySelector('.container').insertBefore(messageDiv, document.querySelector('.table-container'));
-            
+
+            document.querySelector(".container").insertBefore(messageDiv, document.querySelector(".table-container"));
+
             setTimeout(() => {
                 if (messageDiv.parentNode) {
                     messageDiv.remove();
                 }
             }, 5000);
         }
-        
-        // Update sync status
-        function updateSyncStatus(connected, text) {
-            isConnected = connected;
-            const indicator = document.getElementById('sync-indicator');
-            const syncText = document.getElementById('sync-text');
-            
-            if (connected) {
-                indicator.classList.add('connected');
-                syncText.textContent = text || 'Connected';
-            } else {
-                indicator.classList.remove('connected');
-                syncText.textContent = text || 'Not Connected';
-            }
-        }
-        
-        // Check connection and sync
-        async function checkConnection() {
-            if (!SHEET_URL) return;
-            
-            try {
-                await loadFromSheet();
-                updateSyncStatus(true, 'Synced');
-            } catch (error) {
-                updateSyncStatus(false, 'Sync Error');
-                console.error('Sync error:', error);
-            }
-        }
-        
-        // Get Google Sheets CSV URL
-        function getSheetCsvUrl() {
-            if (!SHEET_URL) return '';
-            
-            const match = SHEET_URL.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-            if (!match) return '';
-            
-            const sheetId = match[1];
-            return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0`;
-        }
-        
-        // Load data from Google Sheets
-        async function loadFromSheet() {
-            if (!SHEET_URL) return;
-            
-            try {
-                document.getElementById('loading').style.display = 'block';
-                
-                const csvUrl = getSheetCsvUrl();
-                const response = await fetch(csvUrl);
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch sheet data');
-                }
-                
-                const csvText = await response.text();
-                const rows = csvText.split('\n').slice(1); // Skip header row
-                
-                let hasUpdates = false;
-                
-                // Clear existing rows first
-            const tbody = document.getElementById('tracker-body');
-            tbody.innerHTML = '';
 
-// Create rows based on sheet data
-            rows.forEach((row, index) => {
-             if (row && row.trim()) {
-        const cells = parseCSVRow(row);
-        if (cells.length >= 4) {
-            createBookRow(cells[0], cells[1], cells[2], cells[3], index);
-        }
-    }
-});
-                
-                if (hasUpdates) {
-                    saveToStorage(); // Save the synced data locally
-                }
-                
-                updateSyncStatus(true, 'Synced');
-                document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
-                
-            } catch (error) {
-                console.error('Error loading from sheet:', error);
-                updateSyncStatus(false, 'Sync Error');
-                throw error;
-            } finally {
-                document.getElementById('loading').style.display = 'none';
-            }
-        }
-        
-        // Parse CSV row (handles quoted values)
-        function parseCSVRow(row) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-            
-            for (let i = 0; i < row.length; i++) {
-                const char = row[i];
-                
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            
-            result.push(current.trim());
-            return result;
-        }
-
-        // Create a new book row dynamically
-function createBookRow(bookName, goal, completed, notes, index) {
-    const tbody = document.getElementById('tracker-body');
-    const row = document.createElement('tr');
-    row.setAttribute('data-book', index);
-    
-    row.innerHTML = `
-        <td class="book-name">${bookName}</td>
-        <td><input type="number" class="goal-input" value="${goal || 0}" min="1"></td>
-        <td><input type="number" class="completed-input" value="${completed || 0}" min="0"></td>
-        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-        <td class="percentage">0%</td>
-        <td><input type="text" class="notes-input" placeholder="Notes..." value="${notes || ''}"></td>
-    `;
-    
-    tbody.appendChild(row);
-    updateRow(row);
-}
-        
-       // Save to local storage
-        function saveToStorage() {
-            const data = [];
-            
-            document.querySelectorAll('#tracker-body tr').forEach((row, index) => {
-                row.setAttribute('data-book', index); // Update index
-                const bookName = row.querySelector('.book-name').textContent;
-                const goal = row.querySelector('.goal-input').value;
-                const completed = row.querySelector('.completed-input').value;
-                const notes = row.querySelector('.notes-input').value;
-                
-                data.push({ bookName, goal, completed, notes });
-            });
-            
-            setStorageItem('trackerData', JSON.stringify(data));
-        }
-        
-        // Load from local storage
-        function loadFromStorage() {
-            const savedData = getStorageItem('trackerData');
-            if (!savedData) return;
-            
-            try {
-                const data = JSON.parse(savedData);
-                
-                document.querySelectorAll('#tracker-body tr').forEach((row, index) => {
-                    if (data[index]) {
-                        const item = data[index];
-                        row.querySelector('.goal-input').value = item.goal || '0';
-                        row.querySelector('.completed-input').value = item.completed || '0';
-                        row.querySelector('.notes-input').value = item.notes || '';
-                        updateRow(row);
-                    }
-                });
-            } catch (error) {
-                console.error('Error loading from storage:', error);
-            }
-        }
-        
-        // Force sync with enhanced feedback
-        async function forceSync() {
-            if (!SHEET_URL) {
-                showMessage('No Google Sheet connected', 'error');
-                return;
-            }
-            
-            try {
-                updateSyncStatus(true, 'Force Syncing...');
-                showMessage('🔄 Syncing data with Google Sheets...', 'success');
-                
-                // First load from sheet, then write back any local changes
-                await enhancedSync();
-                
-                showMessage('✅ Data synced successfully! Your Google Sheet is now up to date.', 'success');
-            } catch (error) {
-                showMessage('❌ Sync failed. Check your connection and sheet permissions.', 'error');
-                console.error('Force sync error:', error);
-            }
-        }
-        
         // Clear all data
         function clearData() {
-            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
-                // Reset all inputs
-                document.querySelectorAll('#tracker-body tr').forEach(row => {
-                    row.querySelector('.goal-input').value = row.dataset.book === '0' ? '100' : 
-                                                            row.dataset.book === '1' ? '20' :
-                                                            row.dataset.book === '2' ? '15' :
-                                                            row.dataset.book === '3' ? '25' :
-                                                            row.dataset.book === '4' ? '10' :
-                                                            row.dataset.book === '5' ? '50' :
-                                                            row.dataset.book === '6' ? '12' : '30';
-                    row.querySelector('.completed-input').value = '0';
-                    row.querySelector('.notes-input').value = '';
-                    updateRow(row);
-                });
-                
-                // Clear storage
-                try {
-                    localStorage.removeItem('trackerData');
-                    localStorage.removeItem('sheetUrl');
-                } catch (e) {
-                    window.memoryStorage = {};
-                }
-                
-                // Reset connection
-                SHEET_URL = '';
-                document.getElementById('sheet-url').value = '';
-                document.getElementById('force-sync-btn').style.display = 'none';
-                updateSyncStatus(false, 'Not Connected');
-                
-                showMessage('All data cleared successfully!', 'success');
+            if (confirm("Are you sure you want to clear all data? This will reset to default books.")) {
+                loadDefaultBooks();
+                setStorageItem("trackerData", "");
+                SHEET_URL = "";
+                setStorageItem("sheetUrl", "");
+                document.getElementById("sheet-url").value = "";
+                document.getElementById("load-btn").style.display = "none";
+                updateSyncStatus(false, "Not Connected");
+                showMessage("All data cleared successfully!", "success");
             }
         }
-        
-        // Setup event listeners with enhanced sync
-        function setupEventListeners() {
-            // Listen for input changes with immediate sync
-            document.addEventListener('input', function(e) {
-                if (e.target.matches('.goal-input, .completed-input, .notes-input')) {
-                    const row = e.target.closest('tr');
-                    updateRow(row);
-                    
-                    // Save to storage immediately
-                    saveToStorage();
-                    
-                    // Sync to Google Sheets with debouncing
-                    if (SHEET_URL && isConnected) {
-                        clearTimeout(syncTimeout);
-                        updateSyncStatus(true, 'Saving...');
-                        
-                        syncTimeout = setTimeout(async () => {
-                            try {
-                                await syncToSheet();
-                                updateSyncStatus(true, 'Synced');
-                            } catch (error) {
-                                updateSyncStatus(false, 'Sync Error');
-                                console.error('Auto-sync failed:', error);
-                            }
-                        }, 1500); // Sync after 1.5 seconds of no typing
-                    }
-                }
-            });
-            
-            // Add blur event for immediate sync when user finishes editing
-            document.addEventListener('blur', function(e) {
-                if (e.target.matches('.goal-input, .completed-input, .notes-input')) {
-                    if (SHEET_URL && isConnected) {
-                        clearTimeout(syncTimeout);
-                        syncToSheet();
-                    }
-                }
-            }, true);
-        }
-        
-        // Update a single row
-        function updateRow(row) {
-            const goalInput = row.querySelector('.goal-input');
-            const completedInput = row.querySelector('.completed-input');
-            const progressBar = row.querySelector('.progress-bar');
-            const percentage = row.querySelector('.percentage');
-            
-            const goal = parseInt(goalInput.value) || 0;
-            const completed = parseInt(completedInput.value) || 0;
-            
-            // Ensure completed doesn't exceed goal
-            if (completed > goal) {
-                completedInput.value = goal;
-            }
-            
-            const actualCompleted = Math.min(completed, goal);
-            const progress = goal > 0 ? (actualCompleted / goal) : 0;
-            const progressPercent = Math.round(progress * 100);
-            
-            // Update progress bar
-            const filledBlocks = Math.round(progress * 20);
-            const emptyBlocks = 20 - filledBlocks;
-            progressBar.textContent = '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
-            
-            // Update percentage
-            percentage.textContent = progressPercent + '%';
-            
-            // Update row styling
-            row.className = '';
-            if (progressPercent === 100) {
-                row.classList.add('completed-row');
-            } else if (progressPercent > 0) {
-                row.classList.add('in-progress-row');
-            }
-            
-            // Update summary
-            updateSummary();
-        }
-        
-        // Update summary statistics
-        function updateSummary() {
-            const rows = document.querySelectorAll('#tracker-body tr');
-            let totalBooks = rows.length;
-            let completedBooks = 0;
-            let totalReadings = 0;
-            let totalProgress = 0;
-            
-            rows.forEach(row => {
-                const goal = parseInt(row.querySelector('.goal-input').value) || 0;
-                const completed = parseInt(row.querySelector('.completed-input').value) || 0;
-                const progress = goal > 0 ? (Math.min(completed, goal) / goal) : 0;
-                
-                totalReadings += Math.min(completed, goal);
-                totalProgress += progress * 100;
-                
-                if (progress === 1) {
-                    completedBooks++;
-                }
-            });
-            
-            const avgProgress = totalBooks > 0 ? Math.round(totalProgress / totalBooks) : 0;
-            
-            document.getElementById('total-books').textContent = totalBooks;
-            document.getElementById('completed-books').textContent = completedBooks;
-            document.getElementById('total-readings').textContent = totalReadings;
-            document.getElementById('avg-progress').textContent = avgProgress + '%';
-        }
-        
-        // Sync to Google Sheets (write data back)
-        async function syncToSheet() {
-            if (!SHEET_URL || !isConnected) return;
-            // Ensure we have at least the header row
-            if (tableData.length < 2) {
-            tableData.push(['Book Name', 'Goal', 'Completed', 'Notes']);
-            }   
-            
-            try {
-                updateSyncStatus(true, 'Syncing...');
-                
-                // Get all current data from the table
-                const tableData = [];
-                tableData.push(['Book Name', 'Goal', 'Completed', 'Notes']); // Header row
-                
-                document.querySelectorAll('#tracker-body tr').forEach(row => {
-                    const bookName = row.querySelector('.book-name').textContent;
-                    const goal = row.querySelector('.goal-input').value;
-                    const completed = row.querySelector('.completed-input').value;
-                    const notes = row.querySelector('.notes-input').value;
-                    
-                    tableData.push([bookName, goal, completed, notes]);
-                });
-                
-                // Convert to CSV format
-                const csvContent = tableData.map(row => 
-                    row.map(cell => {
-                        // Escape quotes and wrap in quotes if contains comma
-                        const escaped = String(cell).replace(/"/g, '""');
-                        return escaped.includes(',') || escaped.includes('"') || escaped.includes('\n') 
-                            ? `"${escaped}"` 
-                            : escaped;
-                    }).join(',')
-                ).join('\n');
-                
-                // Use Google Sheets API via Google Apps Script Web App
-                await writeToGoogleSheet(csvContent);
-                
-                updateSyncStatus(true, 'Synced');
-                document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
-                
-            } catch (error) {
-                console.error('Sync error:', error);
-                updateSyncStatus(false, 'Sync Error');
-                showMessage('Sync failed. Check your Google Sheet permissions.', 'error');
-            }
-        }
-        
-        // Write data to Google Sheet using form submission method
-        // Write data to Google Sheet using Google Apps Script Web App
-async function writeToGoogleSheet(csvData) {
-    // Extract sheet ID from URL
-    const match = SHEET_URL.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-    if (!match) throw new Error('Invalid sheet URL');
-    
-    const sheetId = match[1];
-    
-    // Check if user has set up Google Apps Script Web App URL
-    const webAppUrl = getStorageItem('webAppUrl');
-    
-    if (webAppUrl) {
-        // Use Google Apps Script Web App for writing
-        const response = await fetch(webAppUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'updateSheet',
-                sheetId: sheetId,
-                data: csvData
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to update sheet via Web App');
-        }
-    } else {
-        // Show setup instructions for Google Apps Script
-        showWebAppSetupInstructions();
-        throw new Error('Google Apps Script Web App not configured');
-    }
-}
-        
-        // Update specific range in Google Sheet
-        async function updateSheetRange(sheetId, range, values) {
-            // This is a simplified approach - in production you'd use Google Sheets API
-            // For now, we'll use a workaround with the public edit capability
-            
-            try {
-                // Create a temporary form to submit data
-                const submitUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/edit`;
-                
-                // Since we can't directly write to sheets from client-side without API keys,
-                // we'll implement a polling mechanism to check for changes
-                // and rely on manual sync for now
-                
-                return true;
-            } catch (error) {
-                throw new Error('Failed to update sheet range');
-            }
-        }
-        
-        // Enhanced sync with better error handling
-        async function enhancedSync() {
-            if (!SHEET_URL) {
-                showMessage('Please connect to a Google Sheet first', 'error');
-                return;
-            }
-            
-            try {
-                updateSyncStatus(true, 'Syncing...');
-                
-                // First, load latest data from sheet
-                await loadFromSheet();
-                
-                // Then, attempt to write local changes back
-                await syncToSheet();
-                
-            } catch (error) {
-                console.error('Enhanced sync failed:', error);
-                updateSyncStatus(false, 'Sync Error');
-                showMessage('Sync failed. Make sure your Google Sheet allows editing.', 'error');
-            }
-        }
-        
-        // Show sync instructions if direct API fails
-        function showSyncInstructions() {
-            const instructions = `
-                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 10px;">
-                    <strong>🔄 Manual Sync Required</strong><br>
-                    To enable automatic syncing:<br>
-                    1. Make your Google Sheet publicly editable (Anyone with link can edit)<br>
-                    2. Or use Google Apps Script to create a web app endpoint<br>
-                    3. For now, your data is saved locally and will sync when you reload the page
-                </div>
-            `;
-            
-            document.querySelector('.setup-panel').innerHTML += instructions;
-        }
-
-        // Show instructions for setting up Google Apps Script Web App
-function showWebAppSetupInstructions() {
-    const instructions = `
-        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 10px;">
-            <strong>📝 Setup Required for Two-Way Sync</strong><br>
-            To enable writing back to Google Sheets:<br>
-            1. Go to <a href="https://script.google.com" target="_blank">script.google.com</a><br>
-            2. Create a new project and paste this code:<br>
-            <textarea readonly style="width:100%; height:100px; font-family:monospace; font-size:12px;">
-function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents);
-    const sheetId = data.sheetId;
-    const csvData = data.data;
-    
-    const sheet = SpreadsheetApp.openById(sheetId).getActiveSheet();
-    const rows = csvData.split('\\n');
-    
-    // Clear existing data
-    sheet.clear();
-    
-    // Write new data
-    rows.forEach((row, index) => {
-      const cells = row.split(',');
-      if (cells.length > 0) {
-        sheet.getRange(index + 1, 1, 1, cells.length).setValues([cells]);
-      }
-    });
-    
-    return ContentService.createTextOutput('Success');
-  } catch (error) {
-    return ContentService.createTextOutput('Error: ' + error.toString());
-  }
-}
-            </textarea><br>
-            3. Deploy as Web App (Execute as: Me, Access: Anyone)<br>
-            4. Copy the Web App URL and paste it below:<br>
-            <input type="text" id="webapp-url" placeholder="Paste Web App URL here..." style="width:100%; margin:5px 0;">
-            <button onclick="saveWebAppUrl()" style="padding:5px 10px;">Save Web App URL</button>
-        </div>
-    `;
-    
-    document.querySelector('.setup-panel').innerHTML += instructions;
-}
-
-// Save Web App URL
-function saveWebAppUrl() {
-    const url = document.getElementById('webapp-url').value.trim();
-    if (url) {
-        setStorageItem('webAppUrl', url);
-        showMessage('Web App URL saved! Two-way sync is now enabled.', 'success');
-        document.getElementById('webapp-url').style.display = 'none';
-    }
-}
     </script>
 </body>
 </html>
