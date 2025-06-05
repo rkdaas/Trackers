@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiritual Books Reading Progress Tracker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .tracker-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        .tracker-table th {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .tracker-table td {
+            padding: 15px 10px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        
+        .tracker-table tr:hover {
+            background: #f8f9ff;
+            transform: scale(1.002);
+            transition: all 0.2s ease;
+        }
+        
+        .book-name {
+            font-weight: 600;
+            color: #2c3e50;
+            max-width: 200px;
+        }
+        
+        .goal-input, .completed-input {
+            width: 60px;
+            padding: 8px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .goal-input:focus, .completed-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .progress-bar {
+            font-family: monospace;
+            font-size: 16px;
+            letter-spacing: 1px;
+            color: #27ae60;
+            min-width: 300px;
+        }
+        
+        .percentage {
+            font-weight: 600;
+            font-size: 16px;
+            color: #2c3e50;
+            min-width: 70px;
+        }
+        
+        .notes-input {
+            width: 100%;
+            max-width: 200px;
+            padding: 8px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 35px;
+        }
+        
+        .notes-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .completed-row {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        }
+        
+        .in-progress-row {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        }
+        
+        .summary {
+            padding: 30px;
+            background: #f8f9fa;
+            border-top: 3px solid #667eea;
+        }
+        
+        .summary h3 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+            font-size: 1.4em;
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+            margin: 0;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            margin: 5px 0 0 0;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .last-updated {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+            background: #f8f9fa;
+        }
+        
+        @media (max-width: 768px) {
+            .tracker-table {
+                font-size: 14px;
+            }
+            
+            .progress-bar {
+                font-size: 14px;
+                min-width: 200px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🕉️ Spiritual Books Reading Progress Tracker</h1>
+            <p>Track your journey through Srila Prabhupada's sacred literature</p>
+        </div>
+        
+        <table class="tracker-table">
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Goal</th>
+                    <th>Completed</th>
+                    <th>Progress Bar</th>
+                    <th>% Complete</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody id="tracker-body">
+                <tr data-book="0">
+                    <td class="book-name">Bhagavad Gita As It Is</td>
+                    <td><input type="number" class="goal-input" value="100" min="1"></td>
+                    <td><input type="number" class="completed-input" value="0" min="0"></td>
+                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                    <td class="percentage">0%</td>
+                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
+                </tr>
+                <tr data-book="1">
+                    <td class="book-name">Srimad Bhagavatam</td>
+                    <td><input type="number" class="goal-input" value="20" min="1"></td>
+                    <td><input type="number" class="completed-input" value="0" min="0"></td>
+                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                    <td class="percentage">0%</td>
+                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
+                </tr>
+                <tr data-book="2">
+                    <td class="book-name">Sri Chaitanya Charitamrita</td>
+                    <td><input type="number" class="goal-input" value="15" min="1"></td>
+                    <td><input type="number" class="completed-input" value="0" min="0"></td>
+                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                    <td class="percentage">0%</td>
+                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
+                </tr>
+                <tr data-book="3">
+                    <td class="book-name">Krishna Book</td>
+                    <td><input type="number" class="goal-input" value="25" min="1"></td>
+                    <td><input type="number" class="completed-input" value="0" min="0"></td>
+                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                    <td class="percentage">0%</td>
+                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
+                </tr>
+                <tr data-book="4">
+                    <td class="book-name">Prabhupada Lilamrita</td>
+                    <td><input type="number" class="goal-input" value="10" min="1"></td>
+                    <td><input type="number" class="completed-input" value="0" min="0"></td>
+                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                    <td class="percentage">0%</td>
+                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
+                </tr>
+                <tr data-book="5">
+                    <td class="book-name">Small Books Collection</td>
+                    <td><input type="number" class="goal-input" value="50" min="1"></td>
+                    <td><input type="number" class="completed-input" value="0" min="0"></td>
+                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                    <td class="percentage">0%</td>
+                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
+                </tr>
+                <tr data-book="6">
+                    <td class="book-name">Nectar of Devotion</td>
+                    <td><input type="number" class="goal-input" value="12" min="1"></td>
+                    <td><input type="number" class="completed-input" value="0" min="0"></td>
+                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                    <td class="percentage">0%</td>
+                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
+                </tr>
+                <tr data-book="7">
+                    <td class="book-name">Nectar of Instruction</td>
+                    <td><input type="number" class="goal-input" value="30" min="1"></td>
+                    <td><input type="number" class="completed-input" value="0" min="0"></td>
+                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                    <td class="percentage">0%</td>
+                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="summary">
+            <h3>📊 Reading Summary</h3>
+            <div class="summary-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-books">8</div>
+                    <div class="stat-label">Total Books</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="completed-books">0</div>
+                    <div class="stat-label">Completed Books</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-readings">0</div>
+                    <div class="stat-label">Total Readings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avg-progress">0%</div>
+                    <div class="stat-label">Average Progress</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="last-updated">
+            Last updated: <span id="current-date"></span>
+        </div>
+    </div>
+
+    <script>
+        // Set current date
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString();
+        
+        // Function to create progress bar
+        function createProgressBar(completed, goal) {
+            const percentage = Math.min(completed / goal, 1);
+            const filledBlocks = Math.floor(percentage * 20);
+            const emptyBlocks = 20 - filledBlocks;
+            return '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
+        }
+        
+        // Function to update row styling based on progress
+        function updateRowStyling(row, percentage) {
+            row.classList.remove('completed-row', 'in-progress-row');
+            if (percentage >= 100) {
+                row.classList.add('completed-row');
+            } else if (percentage > 0) {
+                row.classList.add('in-progress-row');
+            }
+        }
+        
+        // Function to update a single row
+        function updateRow(row) {
+            const goalInput = row.querySelector('.goal-input');
+            const completedInput = row.querySelector('.completed-input');
+            const progressBar = row.querySelector('.progress-bar');
+            const percentage = row.querySelector('.percentage');
+            
+            const goal = parseInt(goalInput.value) || 1;
+            const completed = parseInt(completedInput.value) || 0;
+            
+            // Ensure completed doesn't exceed goal
+            if (completed > goal) {
+                completedInput.value = goal;
+            }
+            
+            const actualCompleted = Math.min(completed, goal);
+            const progressPercent = Math.min((actualCompleted / goal) * 100, 100);
+            
+            progressBar.textContent = createProgressBar(actualCompleted, goal);
+            percentage.textContent = Math.round(progressPercent) + '%';
+            
+            updateRowStyling(row, progressPercent);
+            updateSummary();
+        }
+        
+        // Function to update summary statistics
+        function updateSummary() {
+            const rows = document.querySelectorAll('#tracker-body tr');
+            let completedBooks = 0;
+            let totalReadings = 0;
+            let totalProgress = 0;
+            
+            rows.forEach(row => {
+                const goal = parseInt(row.querySelector('.goal-input').value) || 1;
+                const completed = parseInt(row.querySelector('.completed-input').value) || 0;
+                const actualCompleted = Math.min(completed, goal);
+                const progressPercent = (actualCompleted / goal) * 100;
+                
+                if (progressPercent >= 100) completedBooks++;
+                totalReadings += actualCompleted;
+                totalProgress += progressPercent;
+            });
+            
+            const avgProgress = totalProgress / rows.length;
+            
+            document.getElementById('total-books').textContent = rows.length;
+            document.getElementById('completed-books').textContent = completedBooks;
+            document.getElementById('total-readings').textContent = totalReadings;
+            document.getElementById('avg-progress').textContent = Math.round(avgProgress) + '%';
+        }
+        
+        // Add event listeners to all inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const allInputs = document.querySelectorAll('.goal-input, .completed-input');
+            
+            allInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    const row = this.closest('tr');
+                    updateRow(row);
+                });
+                
+                input.addEventListener('change', function() {
+                    const row = this.closest('tr');
+                    updateRow(row);
+                });
+            });
+            
+            // Initial update
+            const rows = document.querySelectorAll('#tracker-body tr');
+            rows.forEach(updateRow);
+        });
+        
+        // Save data to localStorage (commented out as per instructions)
+        // function saveData() {
+        //     const data = [];
+        //     document.querySelectorAll('#tracker-body tr').forEach(row => {
+        //         data.push({
+        //             book: row.querySelector('.book-name').textContent,
+        //             goal: row.querySelector('.goal-input').value,
+        //             completed: row.querySelector('.completed-input').value,
+        //             notes: row.querySelector('.notes-input').value
+        //         });
+        //     });
+        //     localStorage.setItem('readingTracker', JSON.stringify(data));
+        // }
+    </script>
+</body>
+</html>
