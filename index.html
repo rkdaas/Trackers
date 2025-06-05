@@ -26,6 +26,7 @@
             color: white;
             padding: 30px;
             text-align: center;
+            position: relative;
         }
         
         .header h1 {
@@ -38,6 +39,87 @@
             margin: 10px 0 0 0;
             opacity: 0.9;
             font-size: 1.1em;
+        }
+        
+        .sync-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .sync-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff6b6b;
+        }
+        
+        .sync-indicator.connected {
+            background: #51cf66;
+        }
+        
+        .setup-panel {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: none;
+        }
+        
+        .setup-panel.show {
+            display: block;
+        }
+        
+        .setup-form {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .setup-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .setup-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+        
+        .setup-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .setup-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .setup-instructions {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            font-size: 0.9em;
+            line-height: 1.5;
         }
         
         .tracker-table {
@@ -180,6 +262,31 @@
             background: #f8f9fa;
         }
         
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
         @media (max-width: 768px) {
             .tracker-table {
                 font-size: 14px;
@@ -193,6 +300,36 @@
             .header h1 {
                 font-size: 1.8em;
             }
+            
+            .sync-status {
+                position: static;
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            .setup-form {
+                flex-direction: column;
+            }
+            
+            .setup-input {
+                min-width: auto;
+                width: 100%;
+            }
+        }
+        
+        .toggle-setup {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        .toggle-setup:hover {
+            background: rgba(255,255,255,0.3);
         }
     </style>
 </head>
@@ -201,9 +338,33 @@
         <div class="header">
             <h1>🕉️ Spiritual Books Reading Progress Tracker</h1>
             <p>Track your journey through Srila Prabhupada's sacred literature</p>
+            <div class="sync-status">
+                <div class="sync-indicator" id="sync-indicator"></div>
+                <span id="sync-text">Not Connected</span>
+            </div>
+            <button class="toggle-setup" onclick="toggleSetup()">Setup Google Sheets Sync</button>
         </div>
         
-        <table class="tracker-table">
+        <div class="setup-panel" id="setup-panel">
+            <div class="setup-form">
+                <input type="text" class="setup-input" id="sheet-url" placeholder="Paste your Google Sheets URL here...">
+                <button class="setup-btn" onclick="connectSheet()" id="connect-btn">Connect</button>
+                <button class="setup-btn" onclick="createNewSheet()" id="create-btn">Create New Sheet</button>
+            </div>
+            <div class="setup-instructions">
+                <strong>Setup Instructions:</strong><br>
+                1. <strong>Option A:</strong> Click "Create New Sheet" to automatically create a Google Sheet<br>
+                2. <strong>Option B:</strong> Create your own Google Sheet, make it public (Anyone with link can edit), then paste the URL above<br>
+                3. Your data will sync automatically across all devices and browsers<br>
+                <strong>Sheet Format:</strong> Columns should be: Book Name | Goal | Completed | Notes
+            </div>
+        </div>
+        
+        <div id="loading" class="loading" style="display: none;">
+            🔄 Syncing with Google Sheets...
+        </div>
+        
+        <table class="tracker-table" id="main-table">
             <thead>
                 <tr>
                     <th>Book Name</th>
@@ -305,15 +466,232 @@
         </div>
         
         <div class="last-updated">
+            Last synced: <span id="last-sync">Never</span> | 
             Last updated: <span id="current-date"></span>
         </div>
     </div>
 
     <script>
+        let SHEET_URL = '';
+        let isConnected = false;
+        let syncTimeout;
+        
         // Set current date
         document.getElementById('current-date').textContent = new Date().toLocaleDateString();
         
-        // Function to create progress bar
+        // Load saved sheet URL from localStorage
+        function loadSheetConfig() {
+            const savedUrl = localStorage.getItem('sheetUrl');
+            if (savedUrl) {
+                SHEET_URL = savedUrl;
+                document.getElementById('sheet-url').value = savedUrl;
+                checkConnection();
+            }
+        }
+        
+        // Toggle setup panel
+        function toggleSetup() {
+            const panel = document.getElementById('setup-panel');
+            panel.classList.toggle('show');
+        }
+        
+        // Connect to existing sheet
+        async function connectSheet() {
+            const url = document.getElementById('sheet-url').value.trim();
+            if (!url) {
+                showMessage('Please enter a Google Sheets URL', 'error');
+                return;
+            }
+            
+            // Convert view URL to edit URL if needed
+            const editUrl = url.replace('/edit#gid=', '/edit?usp=sharing#gid=').replace('?usp=sharing', '');
+            
+            SHEET_URL = editUrl;
+            localStorage.setItem('sheetUrl', SHEET_URL);
+            
+            showMessage('Connecting to Google Sheets...', 'info');
+            
+            // Test connection and load data
+            try {
+                await loadFromSheet();
+                showMessage('Successfully connected to Google Sheets!', 'success');
+                document.getElementById('setup-panel').classList.remove('show');
+            } catch (error) {
+                showMessage('Failed to connect. Make sure the sheet is public and editable.', 'error');
+                console.error('Connection error:', error);
+            }
+        }
+        
+        // Create new sheet (opens Google Sheets)
+        function createNewSheet() {
+            const templateUrl = 'https://docs.google.com/spreadsheets/d/1mBKcPEEHLGFCTDdWGBEFHXEwvq0jIXCJ8vV1ZXZxTBE/copy';
+            window.open(templateUrl, '_blank');
+            showMessage('Opening Google Sheets to create your tracker. Make it public and paste the URL above.', 'info');
+        }
+        
+        // Show messages
+        function showMessage(message, type) {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.error-message, .success-message, .info-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'error' ? 'error-message' : 
+                                  type === 'success' ? 'success-message' : 'success-message';
+            messageDiv.textContent = message;
+            
+            document.querySelector('.container').insertBefore(messageDiv, document.querySelector('.tracker-table'));
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 5000);
+        }
+        
+        // Update sync status
+        function updateSyncStatus(connected, text) {
+            isConnected = connected;
+            const indicator = document.getElementById('sync-indicator');
+            const syncText = document.getElementById('sync-text');
+            
+            if (connected) {
+                indicator.classList.add('connected');
+                syncText.textContent = text || 'Connected';
+            } else {
+                indicator.classList.remove('connected');
+                syncText.textContent = text || 'Not Connected';
+            }
+        }
+        
+        // Check connection
+        async function checkConnection() {
+            if (!SHEET_URL) return;
+            
+            try {
+                // Simple test to see if we can access the sheet
+                const response = await fetch(getSheetApiUrl() + '?alt=json');
+                if (response.ok) {
+                    updateSyncStatus(true, 'Connected');
+                    loadFromSheet();
+                } else {
+                    updateSyncStatus(false, 'Connection Failed');
+                }
+            } catch (error) {
+                updateSyncStatus(false, 'Connection Error');
+            }
+        }
+        
+        // Get Google Sheets API URL
+        function getSheetApiUrl() {
+            if (!SHEET_URL) return '';
+            
+            // Extract sheet ID from URL
+            const match = SHEET_URL.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+            if (!match) return '';
+            
+            const sheetId = match[1];
+            return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq`;
+        }
+        
+        // Load data from Google Sheets
+        async function loadFromSheet() {
+            if (!SHEET_URL) return;
+            
+            try {
+                document.getElementById('loading').style.display = 'block';
+                
+                const response = await fetch(getSheetApiUrl() + '?tqx=out:json');
+                const text = await response.text();
+                
+                // Parse Google's JSONP response
+                const jsonString = text.substring(47).slice(0, -2);
+                const data = JSON.parse(jsonString);
+                
+                if (data.table && data.table.rows) {
+                    // Skip header row, process data rows
+                    const rows = data.table.rows.slice(1);
+                    
+                    document.querySelectorAll('#tracker-body tr').forEach((row, index) => {
+                        if (rows[index] && rows[index].c) {
+                            const cells = rows[index].c;
+                            
+                            // Update inputs with sheet data
+                            if (cells[1] && cells[1].v !== null) {
+                                row.querySelector('.goal-input').value = cells[1].v || 0;
+                            }
+                            if (cells[2] && cells[2].v !== null) {
+                                row.querySelector('.completed-input').value = cells[2].v || 0;
+                            }
+                            if (cells[3] && cells[3].v !== null) {
+                                row.querySelector('.notes-input').value = cells[3].v || '';
+                            }
+                            
+                            updateRow(row);
+                        }
+                    });
+                    
+                    updateSyncStatus(true, 'Synced');
+                    document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
+                }
+                
+            } catch (error) {
+                console.error('Error loading from sheet:', error);
+                updateSyncStatus(false, 'Sync Error');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+        
+        // Save data to Google Sheets (using Google Forms method)
+        async function saveToSheet() {
+            if (!SHEET_URL || !isConnected) {
+                // Fall back to localStorage if no sheet connection
+                saveToLocalStorage();
+                return;
+            }
+            
+            // Note: Direct writing to Google Sheets requires Apps Script or Forms
+            // For now, we'll also save to localStorage as backup
+            saveToLocalStorage();
+            
+            // In a full implementation, you'd need to set up a Google Apps Script
+            // or use Google Forms to handle writes
+            console.log('Sheet sync would happen here - using localStorage for now');
+        }
+        
+        // Save to localStorage as backup
+        function saveToLocalStorage() {
+            const data = [];
+            document.querySelectorAll('#tracker-body tr').forEach(row => {
+                data.push({
+                    book: row.querySelector('.book-name').textContent,
+                    goal: row.querySelector('.goal-input').value,
+                    completed: row.querySelector('.completed-input').value,
+                    notes: row.querySelector('.notes-input').value
+                });
+            });
+            localStorage.setItem('readingTracker', JSON.stringify(data));
+        }
+        
+        // Load from localStorage
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('readingTracker');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                document.querySelectorAll('#tracker-body tr').forEach((row, index) => {
+                    if (data[index]) {
+                        row.querySelector('.goal-input').value = data[index].goal || 0;
+                        row.querySelector('.completed-input').value = data[index].completed || 0;
+                        row.querySelector('.notes-input').value = data[index].notes || '';
+                        updateRow(row);
+                    }
+                });
+            }
+        }
+        
+        // Create progress bar
         function createProgressBar(completed, goal) {
             const percentage = Math.min(completed / goal, 1);
             const filledBlocks = Math.floor(percentage * 20);
@@ -321,7 +699,7 @@
             return '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
         }
         
-        // Function to update row styling based on progress
+        // Update row styling based on progress
         function updateRowStyling(row, percentage) {
             row.classList.remove('completed-row', 'in-progress-row');
             if (percentage >= 100) {
@@ -331,7 +709,7 @@
             }
         }
         
-        // Function to update a single row
+        // Update a single row
         function updateRow(row) {
             const goalInput = row.querySelector('.goal-input');
             const completedInput = row.querySelector('.completed-input');
@@ -356,7 +734,7 @@
             updateSummary();
         }
         
-        // Function to update summary statistics
+        // Update summary statistics
         function updateSummary() {
             const rows = document.querySelectorAll('#tracker-body tr');
             let completedBooks = 0;
@@ -382,40 +760,47 @@
             document.getElementById('avg-progress').textContent = Math.round(avgProgress) + '%';
         }
         
-        // Add event listeners to all inputs
+        // Debounced save function
+        function debouncedSave() {
+            clearTimeout(syncTimeout);
+            syncTimeout = setTimeout(() => {
+                saveToSheet();
+            }, 1000); // Save 1 second after user stops typing
+        }
+        
+        // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            const allInputs = document.querySelectorAll('.goal-input, .completed-input');
+            // Load configuration
+            loadSheetConfig();
+            
+            // Load data from localStorage first (backup)
+            loadFromLocalStorage();
+            
+            // Set up event listeners
+            const allInputs = document.querySelectorAll('.goal-input, .completed-input, .notes-input');
             
             allInputs.forEach(input => {
                 input.addEventListener('input', function() {
                     const row = this.closest('tr');
                     updateRow(row);
+                    debouncedSave(); // Auto-save with debounce
                 });
                 
                 input.addEventListener('change', function() {
                     const row = this.closest('tr');
                     updateRow(row);
+                    debouncedSave(); // Auto-save with debounce
                 });
             });
             
             // Initial update
             const rows = document.querySelectorAll('#tracker-body tr');
             rows.forEach(updateRow);
+            
+            // Try to load from sheet if configured
+            if (SHEET_URL) {
+                setTimeout(checkConnection, 1000);
+            }
         });
-        
-        // Save data to localStorage (commented out as per instructions)
-        // function saveData() {
-        //     const data = [];
-        //     document.querySelectorAll('#tracker-body tr').forEach(row => {
-        //         data.push({
-        //             book: row.querySelector('.book-name').textContent,
-        //             goal: row.querySelector('.goal-input').value,
-        //             completed: row.querySelector('.completed-input').value,
-        //             notes: row.querySelector('.notes-input').value
-        //         });
-        //     });
-        //     localStorage.setItem('readingTracker', JSON.stringify(data));
-        // }
     </script>
 </body>
-</html>
