@@ -671,10 +671,18 @@
                 showMessage('Successfully connected! Data synced from Google Sheets.', 'success');
                 document.getElementById('setup-panel').classList.remove('show');
                 document.getElementById('force-sync-btn').style.display = 'inline-block';
-            } catch (error) {
+            }
+            
+             catch (error) {
                 showMessage('Connection failed. Make sure the sheet is public and editable.', 'error');
                 console.error('Connection error:', error);
             }
+            // Check if Web App is configured
+const webAppUrl = getStorageItem('webAppUrl');
+if (!webAppUrl) {
+    showMessage('Connected for reading. Set up Google Apps Script Web App for two-way sync.', 'success');
+    showWebAppSetupInstructions();
+}
         }
         
         // Create new sheet
@@ -773,30 +781,19 @@
                 
                 let hasUpdates = false;
                 
-                document.querySelectorAll('#tracker-body tr').forEach((row, index) => {
-                    if (rows[index] && rows[index].trim()) {
-                        const cells = parseCSVRow(rows[index]);
-                        
-                        if (cells.length >= 4) {
-                            const currentGoal = row.querySelector('.goal-input').value;
-                            const currentCompleted = row.querySelector('.completed-input').value;
-                            const currentNotes = row.querySelector('.notes-input').value;
-                            
-                            const newGoal = cells[1] || '0';
-                            const newCompleted = cells[2] || '0';
-                            const newNotes = cells[3] || '';
-                            
-                            // Only update if data has changed
-                            if (currentGoal !== newGoal || currentCompleted !== newCompleted || currentNotes !== newNotes) {
-                                row.querySelector('.goal-input').value = newGoal;
-                                row.querySelector('.completed-input').value = newCompleted;
-                                row.querySelector('.notes-input').value = newNotes;
-                                updateRow(row);
-                                hasUpdates = true;
-                            }
-                        }
-                    }
-                });
+                // Clear existing rows first
+            const tbody = document.getElementById('tracker-body');
+            tbody.innerHTML = '';
+
+// Create rows based on sheet data
+            rows.forEach((row, index) => {
+             if (row && row.trim()) {
+        const cells = parseCSVRow(row);
+        if (cells.length >= 4) {
+            createBookRow(cells[0], cells[1], cells[2], cells[3], index);
+        }
+    }
+});
                 
                 if (hasUpdates) {
                     saveToStorage(); // Save the synced data locally
@@ -836,12 +833,32 @@
             result.push(current.trim());
             return result;
         }
+
+        // Create a new book row dynamically
+function createBookRow(bookName, goal, completed, notes, index) {
+    const tbody = document.getElementById('tracker-body');
+    const row = document.createElement('tr');
+    row.setAttribute('data-book', index);
+    
+    row.innerHTML = `
+        <td class="book-name">${bookName}</td>
+        <td><input type="number" class="goal-input" value="${goal || 0}" min="1"></td>
+        <td><input type="number" class="completed-input" value="${completed || 0}" min="0"></td>
+        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+        <td class="percentage">0%</td>
+        <td><input type="text" class="notes-input" placeholder="Notes..." value="${notes || ''}"></td>
+    `;
+    
+    tbody.appendChild(row);
+    updateRow(row);
+}
         
        // Save to local storage
         function saveToStorage() {
             const data = [];
             
-            document.querySelectorAll('#tracker-body tr').forEach(row => {
+            document.querySelectorAll('#tracker-body tr').forEach((row, index) => {
+                row.setAttribute('data-book', index); // Update index
                 const bookName = row.querySelector('.book-name').textContent;
                 const goal = row.querySelector('.goal-input').value;
                 const completed = row.querySelector('.completed-input').value;
@@ -1042,6 +1059,10 @@
         // Sync to Google Sheets (write data back)
         async function syncToSheet() {
             if (!SHEET_URL || !isConnected) return;
+            // Ensure we have at least the header row
+            if (tableData.length < 2) {
+            tableData.push(['Book Name', 'Goal', 'Completed', 'Notes']);
+            }   
             
             try {
                 updateSyncStatus(true, 'Syncing...');
@@ -1084,39 +1105,40 @@
         }
         
         // Write data to Google Sheet using form submission method
-        async function writeToGoogleSheet(csvData) {
-            // Extract sheet ID from URL
-            const match = SHEET_URL.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-            if (!match) throw new Error('Invalid sheet URL');
-            
-            const sheetId = match[1];
-            
-            // Method 1: Try using Google Forms approach (if user has set up a form)
-            // This is a workaround since direct Google Sheets API requires authentication
-            
-            try {
-                // Parse CSV back to rows for individual cell updates
-                const rows = csvData.split('\n').slice(1); // Skip header
-                
-                // Use Google Sheets htmlservice approach via a simple form submission
-                // This requires the sheet to be publicly editable
-                
-                const formData = new FormData();
-                
-                rows.forEach((row, index) => {
-                    const cells = parseCSVRow(row);
-                    if (cells.length >= 4) {
-                        // Update each row via individual range updates
-                        updateSheetRange(sheetId, `A${index + 2}:D${index + 2}`, cells);
-                    }
-                });
-                
-            } catch (error) {
-                console.warn('Direct sheet update failed, using fallback method');
-                // Fallback: Show instructions to user
-                showSyncInstructions();
-            }
+        // Write data to Google Sheet using Google Apps Script Web App
+async function writeToGoogleSheet(csvData) {
+    // Extract sheet ID from URL
+    const match = SHEET_URL.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+    if (!match) throw new Error('Invalid sheet URL');
+    
+    const sheetId = match[1];
+    
+    // Check if user has set up Google Apps Script Web App URL
+    const webAppUrl = getStorageItem('webAppUrl');
+    
+    if (webAppUrl) {
+        // Use Google Apps Script Web App for writing
+        const response = await fetch(webAppUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                action: 'updateSheet',
+                sheetId: sheetId,
+                data: csvData
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to update sheet via Web App');
         }
+    } else {
+        // Show setup instructions for Google Apps Script
+        showWebAppSetupInstructions();
+        throw new Error('Google Apps Script Web App not configured');
+    }
+}
         
         // Update specific range in Google Sheet
         async function updateSheetRange(sheetId, range, values) {
@@ -1174,6 +1196,61 @@
             
             document.querySelector('.setup-panel').innerHTML += instructions;
         }
+
+        // Show instructions for setting up Google Apps Script Web App
+function showWebAppSetupInstructions() {
+    const instructions = `
+        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 10px;">
+            <strong>📝 Setup Required for Two-Way Sync</strong><br>
+            To enable writing back to Google Sheets:<br>
+            1. Go to <a href="https://script.google.com" target="_blank">script.google.com</a><br>
+            2. Create a new project and paste this code:<br>
+            <textarea readonly style="width:100%; height:100px; font-family:monospace; font-size:12px;">
+function doPost(e) {
+  try {
+    const data = JSON.parse(e.postData.contents);
+    const sheetId = data.sheetId;
+    const csvData = data.data;
+    
+    const sheet = SpreadsheetApp.openById(sheetId).getActiveSheet();
+    const rows = csvData.split('\\n');
+    
+    // Clear existing data
+    sheet.clear();
+    
+    // Write new data
+    rows.forEach((row, index) => {
+      const cells = row.split(',');
+      if (cells.length > 0) {
+        sheet.getRange(index + 1, 1, 1, cells.length).setValues([cells]);
+      }
+    });
+    
+    return ContentService.createTextOutput('Success');
+  } catch (error) {
+    return ContentService.createTextOutput('Error: ' + error.toString());
+  }
+}
+            </textarea><br>
+            3. Deploy as Web App (Execute as: Me, Access: Anyone)<br>
+            4. Copy the Web App URL and paste it below:<br>
+            <input type="text" id="webapp-url" placeholder="Paste Web App URL here..." style="width:100%; margin:5px 0;">
+            <button onclick="saveWebAppUrl()" style="padding:5px 10px;">Save Web App URL</button>
+        </div>
+    `;
+    
+    document.querySelector('.setup-panel').innerHTML += instructions;
+}
+
+// Save Web App URL
+function saveWebAppUrl() {
+    const url = document.getElementById('webapp-url').value.trim();
+    if (url) {
+        setStorageItem('webAppUrl', url);
+        showMessage('Web App URL saved! Two-way sync is now enabled.', 'success');
+        document.getElementById('webapp-url').style.display = 'none';
+    }
+}
     </script>
 </body>
 </html>
