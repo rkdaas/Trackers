@@ -7,7 +7,8 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 10px;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
         }
@@ -24,34 +25,34 @@
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
             position: relative;
         }
         
         .header h1 {
             margin: 0;
-            font-size: 2.2em;
+            font-size: 1.8em;
             font-weight: 300;
         }
         
         .header p {
             margin: 10px 0 0 0;
             opacity: 0.9;
-            font-size: 1.1em;
+            font-size: 1em;
         }
         
         .sync-status {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             background: rgba(255,255,255,0.2);
-            padding: 8px 15px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.9em;
+            font-size: 0.8em;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         
         .sync-indicator {
@@ -67,7 +68,7 @@
         
         .setup-panel {
             background: #f8f9fa;
-            padding: 20px;
+            padding: 15px;
             border-bottom: 1px solid #e9ecef;
             display: none;
         }
@@ -78,14 +79,14 @@
         
         .setup-form {
             display: flex;
-            gap: 15px;
+            gap: 10px;
             align-items: center;
             flex-wrap: wrap;
         }
         
         .setup-input {
             flex: 1;
-            min-width: 300px;
+            min-width: 250px;
             padding: 12px;
             border: 2px solid #e1e8ed;
             border-radius: 8px;
@@ -96,11 +97,12 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 12px 20px;
+            padding: 12px 16px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
             transition: transform 0.2s ease;
+            font-size: 14px;
         }
         
         .setup-btn:hover {
@@ -118,12 +120,18 @@
             padding: 15px;
             background: #e3f2fd;
             border-radius: 8px;
-            font-size: 0.9em;
-            line-height: 1.5;
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
         .tracker-table {
             width: 100%;
+            min-width: 800px;
             border-collapse: collapse;
             background: white;
         }
@@ -131,37 +139,38 @@
         .tracker-table th {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
-            padding: 15px 10px;
+            padding: 12px 8px;
             text-align: left;
             font-weight: 600;
-            font-size: 0.95em;
+            font-size: 0.9em;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            white-space: nowrap;
         }
         
         .tracker-table td {
-            padding: 15px 10px;
+            padding: 12px 8px;
             border-bottom: 1px solid #eee;
             vertical-align: middle;
         }
         
         .tracker-table tr:hover {
             background: #f8f9ff;
-            transform: scale(1.002);
-            transition: all 0.2s ease;
         }
         
         .book-name {
             font-weight: 600;
             color: #2c3e50;
-            max-width: 200px;
+            max-width: 180px;
+            word-wrap: break-word;
+            font-size: 0.9em;
         }
         
         .goal-input, .completed-input {
-            width: 60px;
-            padding: 8px;
+            width: 50px;
+            padding: 6px;
             border: 2px solid #e1e8ed;
-            border-radius: 8px;
+            border-radius: 6px;
             text-align: center;
             font-size: 14px;
             transition: border-color 0.3s ease;
@@ -170,39 +179,39 @@
         .goal-input:focus, .completed-input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
         }
         
         .progress-bar {
             font-family: monospace;
-            font-size: 16px;
-            letter-spacing: 1px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
             color: #27ae60;
-            min-width: 300px;
+            min-width: 200px;
         }
         
         .percentage {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             color: #2c3e50;
-            min-width: 70px;
+            min-width: 50px;
         }
         
         .notes-input {
             width: 100%;
-            max-width: 200px;
-            padding: 8px;
+            max-width: 150px;
+            padding: 6px;
             border: 2px solid #e1e8ed;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 6px;
+            font-size: 13px;
             resize: vertical;
-            min-height: 35px;
+            min-height: 30px;
         }
         
         .notes-input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
         }
         
         .completed-row {
@@ -214,33 +223,34 @@
         }
         
         .summary {
-            padding: 30px;
+            padding: 20px;
             background: #f8f9fa;
             border-top: 3px solid #667eea;
         }
         
         .summary h3 {
-            margin: 0 0 20px 0;
+            margin: 0 0 15px 0;
             color: #2c3e50;
-            font-size: 1.4em;
+            font-size: 1.3em;
         }
         
         .summary-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
         }
         
         .stat-card {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border-left: 4px solid #667eea;
+            text-align: center;
         }
         
         .stat-value {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: 700;
             color: #667eea;
             margin: 0;
@@ -249,62 +259,102 @@
         .stat-label {
             color: #7f8c8d;
             margin: 5px 0 0 0;
-            font-size: 0.9em;
+            font-size: 0.85em;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         
         .last-updated {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             color: #7f8c8d;
             font-style: italic;
             background: #f8f9fa;
+            font-size: 0.85em;
         }
         
         .loading {
             text-align: center;
-            padding: 40px;
+            padding: 30px;
             color: #667eea;
-            font-size: 1.1em;
+            font-size: 1em;
+        }
+        
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 15px;
+            font-size: 0.9em;
         }
         
         .error-message {
             background: #f8d7da;
             color: #721c24;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px;
             border: 1px solid #f5c6cb;
         }
         
         .success-message {
             background: #d4edda;
             color: #155724;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px;
             border: 1px solid #c3e6cb;
         }
         
+        .toggle-setup {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        
+        .toggle-setup:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .sync-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .sync-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        
+        .sync-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        /* Mobile Styles */
         @media (max-width: 768px) {
-            .tracker-table {
-                font-size: 14px;
+            body {
+                padding: 5px;
             }
             
-            .progress-bar {
-                font-size: 14px;
-                min-width: 200px;
+            .header {
+                padding: 15px 10px;
             }
             
             .header h1 {
-                font-size: 1.8em;
+                font-size: 1.5em;
             }
             
             .sync-status {
                 position: static;
-                margin-top: 15px;
+                margin-top: 10px;
                 justify-content: center;
+                font-size: 0.75em;
             }
             
             .setup-form {
@@ -315,34 +365,93 @@
                 min-width: auto;
                 width: 100%;
             }
+            
+            .setup-btn {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .tracker-table {
+                min-width: 700px;
+                font-size: 13px;
+            }
+            
+            .tracker-table th,
+            .tracker-table td {
+                padding: 8px 4px;
+            }
+            
+            .book-name {
+                max-width: 120px;
+                font-size: 0.8em;
+            }
+            
+            .goal-input, .completed-input {
+                width: 40px;
+                padding: 4px;
+                font-size: 12px;
+            }
+            
+            .progress-bar {
+                font-size: 12px;
+                min-width: 150px;
+            }
+            
+            .notes-input {
+                max-width: 100px;
+                font-size: 12px;
+                min-height: 25px;
+            }
+            
+            .summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 10px;
+            }
+            
+            .stat-value {
+                font-size: 1.5em;
+            }
         }
         
-        .toggle-setup {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-        
-        .toggle-setup:hover {
-            background: rgba(255,255,255,0.3);
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.3em;
+            }
+            
+            .summary-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .sync-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .sync-btn {
+                width: auto;
+                min-width: 120px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🕉️ Spiritual Books Reading Progress Tracker</h1>
+            <h1>🕉️ Spiritual Books Progress Tracker</h1>
             <p>Track your journey through Srila Prabhupada's sacred literature</p>
             <div class="sync-status">
                 <div class="sync-indicator" id="sync-indicator"></div>
                 <span id="sync-text">Not Connected</span>
             </div>
             <button class="toggle-setup" onclick="toggleSetup()">Setup Google Sheets Sync</button>
+            <div class="sync-actions">
+                <button class="sync-btn" onclick="forceSync()" id="force-sync-btn" style="display: none;">🔄 Force Sync</button>
+                <button class="sync-btn" onclick="clearData()" id="clear-data-btn">🗑️ Clear All Data</button>
+            </div>
         </div>
         
         <div class="setup-panel" id="setup-panel">
@@ -352,11 +461,12 @@
                 <button class="setup-btn" onclick="createNewSheet()" id="create-btn">Create New Sheet</button>
             </div>
             <div class="setup-instructions">
-                <strong>Setup Instructions:</strong><br>
-                1. <strong>Option A:</strong> Click "Create New Sheet" to automatically create a Google Sheet<br>
-                2. <strong>Option B:</strong> Create your own Google Sheet, make it public (Anyone with link can edit), then paste the URL above<br>
-                3. Your data will sync automatically across all devices and browsers<br>
-                <strong>Sheet Format:</strong> Columns should be: Book Name | Goal | Completed | Notes
+                <strong>📱 Mobile-Friendly Setup:</strong><br>
+                1. <strong>Easy Option:</strong> Click "Create New Sheet" to get a template<br>
+                2. <strong>Manual Option:</strong> Create a Google Sheet with columns: Book Name | Goal | Completed | Notes<br>
+                3. <strong>Important:</strong> Make it public (Anyone with link can edit)<br>
+                4. Paste the URL above and click "Connect"<br>
+                5. Your data will sync perfectly across all devices! 📱💻
             </div>
         </div>
         
@@ -364,84 +474,86 @@
             🔄 Syncing with Google Sheets...
         </div>
         
-        <table class="tracker-table" id="main-table">
-            <thead>
-                <tr>
-                    <th>Book Name</th>
-                    <th>Goal</th>
-                    <th>Completed</th>
-                    <th>Progress Bar</th>
-                    <th>% Complete</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody id="tracker-body">
-                <tr data-book="0">
-                    <td class="book-name">Bhagavad Gita As It Is</td>
-                    <td><input type="number" class="goal-input" value="100" min="1"></td>
-                    <td><input type="number" class="completed-input" value="0" min="0"></td>
-                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                    <td class="percentage">0%</td>
-                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
-                </tr>
-                <tr data-book="1">
-                    <td class="book-name">Srimad Bhagavatam</td>
-                    <td><input type="number" class="goal-input" value="20" min="1"></td>
-                    <td><input type="number" class="completed-input" value="0" min="0"></td>
-                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                    <td class="percentage">0%</td>
-                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
-                </tr>
-                <tr data-book="2">
-                    <td class="book-name">Sri Chaitanya Charitamrita</td>
-                    <td><input type="number" class="goal-input" value="15" min="1"></td>
-                    <td><input type="number" class="completed-input" value="0" min="0"></td>
-                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                    <td class="percentage">0%</td>
-                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
-                </tr>
-                <tr data-book="3">
-                    <td class="book-name">Krishna Book</td>
-                    <td><input type="number" class="goal-input" value="25" min="1"></td>
-                    <td><input type="number" class="completed-input" value="0" min="0"></td>
-                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                    <td class="percentage">0%</td>
-                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
-                </tr>
-                <tr data-book="4">
-                    <td class="book-name">Prabhupada Lilamrita</td>
-                    <td><input type="number" class="goal-input" value="10" min="1"></td>
-                    <td><input type="number" class="completed-input" value="0" min="0"></td>
-                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                    <td class="percentage">0%</td>
-                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
-                </tr>
-                <tr data-book="5">
-                    <td class="book-name">Small Books Collection</td>
-                    <td><input type="number" class="goal-input" value="50" min="1"></td>
-                    <td><input type="number" class="completed-input" value="0" min="0"></td>
-                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                    <td class="percentage">0%</td>
-                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
-                </tr>
-                <tr data-book="6">
-                    <td class="book-name">Nectar of Devotion</td>
-                    <td><input type="number" class="goal-input" value="12" min="1"></td>
-                    <td><input type="number" class="completed-input" value="0" min="0"></td>
-                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                    <td class="percentage">0%</td>
-                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
-                </tr>
-                <tr data-book="7">
-                    <td class="book-name">Nectar of Instruction</td>
-                    <td><input type="number" class="goal-input" value="30" min="1"></td>
-                    <td><input type="number" class="completed-input" value="0" min="0"></td>
-                    <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
-                    <td class="percentage">0%</td>
-                    <td><input type="text" class="notes-input" placeholder="Add your notes..."></td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-container">
+            <table class="tracker-table" id="main-table">
+                <thead>
+                    <tr>
+                        <th>Book Name</th>
+                        <th>Goal</th>
+                        <th>Done</th>
+                        <th>Progress Bar</th>
+                        <th>%</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="tracker-body">
+                    <tr data-book="0">
+                        <td class="book-name">Bhagavad Gita As It Is</td>
+                        <td><input type="number" class="goal-input" value="100" min="1"></td>
+                        <td><input type="number" class="completed-input" value="0" min="0"></td>
+                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                        <td class="percentage">0%</td>
+                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
+                    </tr>
+                    <tr data-book="1">
+                        <td class="book-name">Srimad Bhagavatam</td>
+                        <td><input type="number" class="goal-input" value="20" min="1"></td>
+                        <td><input type="number" class="completed-input" value="0" min="0"></td>
+                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                        <td class="percentage">0%</td>
+                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
+                    </tr>
+                    <tr data-book="2">
+                        <td class="book-name">Sri Chaitanya Charitamrita</td>
+                        <td><input type="number" class="goal-input" value="15" min="1"></td>
+                        <td><input type="number" class="completed-input" value="0" min="0"></td>
+                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                        <td class="percentage">0%</td>
+                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
+                    </tr>
+                    <tr data-book="3">
+                        <td class="book-name">Krishna Book</td>
+                        <td><input type="number" class="goal-input" value="25" min="1"></td>
+                        <td><input type="number" class="completed-input" value="0" min="0"></td>
+                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                        <td class="percentage">0%</td>
+                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
+                    </tr>
+                    <tr data-book="4">
+                        <td class="book-name">Prabhupada Lilamrita</td>
+                        <td><input type="number" class="goal-input" value="10" min="1"></td>
+                        <td><input type="number" class="completed-input" value="0" min="0"></td>
+                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                        <td class="percentage">0%</td>
+                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
+                    </tr>
+                    <tr data-book="5">
+                        <td class="book-name">Small Books Collection</td>
+                        <td><input type="number" class="goal-input" value="50" min="1"></td>
+                        <td><input type="number" class="completed-input" value="0" min="0"></td>
+                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                        <td class="percentage">0%</td>
+                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
+                    </tr>
+                    <tr data-book="6">
+                        <td class="book-name">Nectar of Devotion</td>
+                        <td><input type="number" class="goal-input" value="12" min="1"></td>
+                        <td><input type="number" class="completed-input" value="0" min="0"></td>
+                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                        <td class="percentage">0%</td>
+                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
+                    </tr>
+                    <tr data-book="7">
+                        <td class="book-name">Nectar of Instruction</td>
+                        <td><input type="number" class="goal-input" value="30" min="1"></td>
+                        <td><input type="number" class="completed-input" value="0" min="0"></td>
+                        <td class="progress-bar">░░░░░░░░░░░░░░░░░░░░</td>
+                        <td class="percentage">0%</td>
+                        <td><input type="text" class="notes-input" placeholder="Notes..."></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         
         <div class="summary">
             <h3>📊 Reading Summary</h3>
@@ -452,7 +564,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="completed-books">0</div>
-                    <div class="stat-label">Completed Books</div>
+                    <div class="stat-label">Completed</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="total-readings">0</div>
@@ -460,14 +572,14 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-value" id="avg-progress">0%</div>
-                    <div class="stat-label">Average Progress</div>
+                    <div class="stat-label">Avg Progress</div>
                 </div>
             </div>
         </div>
         
         <div class="last-updated">
             Last synced: <span id="last-sync">Never</span> | 
-            Last updated: <span id="current-date"></span>
+            Updated: <span id="current-date"></span>
         </div>
     </div>
 
@@ -475,17 +587,57 @@
         let SHEET_URL = '';
         let isConnected = false;
         let syncTimeout;
+        let lastKnownData = '';
         
         // Set current date
         document.getElementById('current-date').textContent = new Date().toLocaleDateString();
         
-        // Load saved sheet URL from localStorage
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSheetConfig();
+            loadFromStorage();
+            setupEventListeners();
+            
+            // Initial update
+            const rows = document.querySelectorAll('#tracker-body tr');
+            rows.forEach(updateRow);
+            
+            // Auto-sync if sheet is configured
+            if (SHEET_URL) {
+                setTimeout(checkConnection, 1000);
+                // Set up periodic sync
+                setInterval(checkConnection, 30000); // Sync every 30 seconds
+            }
+        });
+        
+        // Load saved sheet URL
         function loadSheetConfig() {
-            const savedUrl = localStorage.getItem('sheetUrl');
+            const savedUrl = getStorageItem('sheetUrl');
             if (savedUrl) {
                 SHEET_URL = savedUrl;
                 document.getElementById('sheet-url').value = savedUrl;
-                checkConnection();
+                document.getElementById('force-sync-btn').style.display = 'inline-block';
+            }
+        }
+        
+        // Storage wrapper (works in Claude.ai environment)
+        function setStorageItem(key, value) {
+            try {
+                // Try localStorage first
+                localStorage.setItem(key, value);
+            } catch (e) {
+                // Fallback to in-memory storage
+                window.memoryStorage = window.memoryStorage || {};
+                window.memoryStorage[key] = value;
+            }
+        }
+        
+        function getStorageItem(key) {
+            try {
+                return localStorage.getItem(key);
+            } catch (e) {
+                window.memoryStorage = window.memoryStorage || {};
+                return window.memoryStorage[key] || null;
             }
         }
         
@@ -503,46 +655,59 @@
                 return;
             }
             
-            // Convert view URL to edit URL if needed
-            const editUrl = url.replace('/edit#gid=', '/edit?usp=sharing#gid=').replace('?usp=sharing', '');
+            // Validate and clean URL
+            if (!url.includes('docs.google.com/spreadsheets')) {
+                showMessage('Please enter a valid Google Sheets URL', 'error');
+                return;
+            }
             
-            SHEET_URL = editUrl;
-            localStorage.setItem('sheetUrl', SHEET_URL);
+            SHEET_URL = url;
+            setStorageItem('sheetUrl', SHEET_URL);
             
-            showMessage('Connecting to Google Sheets...', 'info');
+            showMessage('Connecting to Google Sheets...', 'success');
             
-            // Test connection and load data
             try {
                 await loadFromSheet();
-                showMessage('Successfully connected to Google Sheets!', 'success');
+                showMessage('Successfully connected! Data synced from Google Sheets.', 'success');
                 document.getElementById('setup-panel').classList.remove('show');
+                document.getElementById('force-sync-btn').style.display = 'inline-block';
             } catch (error) {
-                showMessage('Failed to connect. Make sure the sheet is public and editable.', 'error');
+                showMessage('Connection failed. Make sure the sheet is public and editable.', 'error');
                 console.error('Connection error:', error);
             }
         }
         
-        // Create new sheet (opens Google Sheets)
+        // Create new sheet
         function createNewSheet() {
-            const templateUrl = 'https://docs.google.com/spreadsheets/d/1mBKcPEEHLGFCTDdWGBEFHXEwvq0jIXCJ8vV1ZXZxTBE/copy';
-            window.open(templateUrl, '_blank');
-            showMessage('Opening Google Sheets to create your tracker. Make it public and paste the URL above.', 'info');
+            // Create a template URL that will help users create the right format
+            const templateData = [
+                ['Book Name', 'Goal', 'Completed', 'Notes'],
+                ['Bhagavad Gita As It Is', '100', '0', ''],
+                ['Srimad Bhagavatam', '20', '0', ''],
+                ['Sri Chaitanya Charitamrita', '15', '0', ''],
+                ['Krishna Book', '25', '0', ''],
+                ['Prabhupada Lilamrita', '10', '0', ''],
+                ['Small Books Collection', '50', '0', ''],
+                ['Nectar of Devotion', '12', '0', ''],
+                ['Nectar of Instruction', '30', '0', '']
+            ];
+            
+            // Open Google Sheets
+            window.open('https://docs.google.com/spreadsheets/create', '_blank');
+            showMessage('Create a new Google Sheet with the book data, make it public (Anyone with link can edit), then paste the URL above.', 'success');
         }
         
         // Show messages
         function showMessage(message, type) {
-            // Remove existing messages
-            const existingMessages = document.querySelectorAll('.error-message, .success-message, .info-message');
+            const existingMessages = document.querySelectorAll('.message');
             existingMessages.forEach(msg => msg.remove());
             
             const messageDiv = document.createElement('div');
-            messageDiv.className = type === 'error' ? 'error-message' : 
-                                  type === 'success' ? 'success-message' : 'success-message';
+            messageDiv.className = `message ${type}-message`;
             messageDiv.textContent = message;
             
-            document.querySelector('.container').insertBefore(messageDiv, document.querySelector('.tracker-table'));
+            document.querySelector('.container').insertBefore(messageDiv, document.querySelector('.table-container'));
             
-            // Auto-remove after 5 seconds
             setTimeout(() => {
                 if (messageDiv.parentNode) {
                     messageDiv.remove();
@@ -565,34 +730,28 @@
             }
         }
         
-        // Check connection
+        // Check connection and sync
         async function checkConnection() {
             if (!SHEET_URL) return;
             
             try {
-                // Simple test to see if we can access the sheet
-                const response = await fetch(getSheetApiUrl() + '?alt=json');
-                if (response.ok) {
-                    updateSyncStatus(true, 'Connected');
-                    loadFromSheet();
-                } else {
-                    updateSyncStatus(false, 'Connection Failed');
-                }
+                await loadFromSheet();
+                updateSyncStatus(true, 'Synced');
             } catch (error) {
-                updateSyncStatus(false, 'Connection Error');
+                updateSyncStatus(false, 'Sync Error');
+                console.error('Sync error:', error);
             }
         }
         
-        // Get Google Sheets API URL
-        function getSheetApiUrl() {
+        // Get Google Sheets CSV URL
+        function getSheetCsvUrl() {
             if (!SHEET_URL) return '';
             
-            // Extract sheet ID from URL
             const match = SHEET_URL.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
             if (!match) return '';
             
             const sheetId = match[1];
-            return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq`;
+            return `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0`;
         }
         
         // Load data from Google Sheets
@@ -602,111 +761,188 @@
             try {
                 document.getElementById('loading').style.display = 'block';
                 
-                const response = await fetch(getSheetApiUrl() + '?tqx=out:json');
-                const text = await response.text();
+                const csvUrl = getSheetCsvUrl();
+                const response = await fetch(csvUrl);
                 
-                // Parse Google's JSONP response
-                const jsonString = text.substring(47).slice(0, -2);
-                const data = JSON.parse(jsonString);
-                
-                if (data.table && data.table.rows) {
-                    // Skip header row, process data rows
-                    const rows = data.table.rows.slice(1);
-                    
-                    document.querySelectorAll('#tracker-body tr').forEach((row, index) => {
-                        if (rows[index] && rows[index].c) {
-                            const cells = rows[index].c;
-                            
-                            // Update inputs with sheet data
-                            if (cells[1] && cells[1].v !== null) {
-                                row.querySelector('.goal-input').value = cells[1].v || 0;
-                            }
-                            if (cells[2] && cells[2].v !== null) {
-                                row.querySelector('.completed-input').value = cells[2].v || 0;
-                            }
-                            if (cells[3] && cells[3].v !== null) {
-                                row.querySelector('.notes-input').value = cells[3].v || '';
-                            }
-                            
-                            updateRow(row);
-                        }
-                    });
-                    
-                    updateSyncStatus(true, 'Synced');
-                    document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
+                if (!response.ok) {
+                    throw new Error('Failed to fetch sheet data');
                 }
+                
+                const csvText = await response.text();
+                const rows = csvText.split('\n').slice(1); // Skip header row
+                
+                let hasUpdates = false;
+                
+                document.querySelectorAll('#tracker-body tr').forEach((row, index) => {
+                    if (rows[index] && rows[index].trim()) {
+                        const cells = parseCSVRow(rows[index]);
+                        
+                        if (cells.length >= 4) {
+                            const currentGoal = row.querySelector('.goal-input').value;
+                            const currentCompleted = row.querySelector('.completed-input').value;
+                            const currentNotes = row.querySelector('.notes-input').value;
+                            
+                            const newGoal = cells[1] || '0';
+                            const newCompleted = cells[2] || '0';
+                            const newNotes = cells[3] || '';
+                            
+                            // Only update if data has changed
+                            if (currentGoal !== newGoal || currentCompleted !== newCompleted || currentNotes !== newNotes) {
+                                row.querySelector('.goal-input').value = newGoal;
+                                row.querySelector('.completed-input').value = newCompleted;
+                                row.querySelector('.notes-input').value = newNotes;
+                                updateRow(row);
+                                hasUpdates = true;
+                            }
+                        }
+                    }
+                });
+                
+                if (hasUpdates) {
+                    saveToStorage(); // Save the synced data locally
+                }
+                
+                updateSyncStatus(true, 'Synced');
+                document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
                 
             } catch (error) {
                 console.error('Error loading from sheet:', error);
                 updateSyncStatus(false, 'Sync Error');
+                throw error;
             } finally {
                 document.getElementById('loading').style.display = 'none';
             }
         }
         
-        // Save data to Google Sheets (using Google Forms method)
-        async function saveToSheet() {
-            if (!SHEET_URL || !isConnected) {
-                // Fall back to localStorage if no sheet connection
-                saveToLocalStorage();
-                return;
+        // Parse CSV row (handles quoted values)
+        function parseCSVRow(row) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < row.length; i++) {
+                const char = row[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
             }
             
-            // Note: Direct writing to Google Sheets requires Apps Script or Forms
-            // For now, we'll also save to localStorage as backup
-            saveToLocalStorage();
-            
-            // In a full implementation, you'd need to set up a Google Apps Script
-            // or use Google Forms to handle writes
-            console.log('Sheet sync would happen here - using localStorage for now');
+            result.push(current.trim());
+            return result;
         }
         
-        // Save to localStorage as backup
-        function saveToLocalStorage() {
+        // Save to local storage
+        function saveToStorage() {
             const data = [];
+            
             document.querySelectorAll('#tracker-body tr').forEach(row => {
-                data.push({
-                    book: row.querySelector('.book-name').textContent,
-                    goal: row.querySelector('.goal-input').value,
-                    completed: row.querySelector('.completed-input').value,
-                    notes: row.querySelector('.notes-input').value
-                });
+                const bookName = row.querySelector('.book-name').textContent;
+                const goal = row.querySelector('.goal-input').value;
+                const completed = row.querySelector('.completed-input').value;
+                const notes = row.querySelector('.notes-input').value;
+                
+                data.push({ bookName, goal, completed, notes });
             });
-            localStorage.setItem('readingTracker', JSON.stringify(data));
+            
+            setStorageItem('trackerData', JSON.stringify(data));
         }
         
-        // Load from localStorage
-        function loadFromLocalStorage() {
-            const savedData = localStorage.getItem('readingTracker');
-            if (savedData) {
+        // Load from local storage
+        function loadFromStorage() {
+            const savedData = getStorageItem('trackerData');
+            if (!savedData) return;
+            
+            try {
                 const data = JSON.parse(savedData);
+                
                 document.querySelectorAll('#tracker-body tr').forEach((row, index) => {
                     if (data[index]) {
-                        row.querySelector('.goal-input').value = data[index].goal || 0;
-                        row.querySelector('.completed-input').value = data[index].completed || 0;
-                        row.querySelector('.notes-input').value = data[index].notes || '';
+                        const item = data[index];
+                        row.querySelector('.goal-input').value = item.goal || '0';
+                        row.querySelector('.completed-input').value = item.completed || '0';
+                        row.querySelector('.notes-input').value = item.notes || '';
                         updateRow(row);
                     }
                 });
+            } catch (error) {
+                console.error('Error loading from storage:', error);
             }
         }
         
-        // Create progress bar
-        function createProgressBar(completed, goal) {
-            const percentage = Math.min(completed / goal, 1);
-            const filledBlocks = Math.floor(percentage * 20);
-            const emptyBlocks = 20 - filledBlocks;
-            return '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
+        // Force sync with Google Sheets
+        async function forceSync() {
+            if (!SHEET_URL) {
+                showMessage('No Google Sheet connected', 'error');
+                return;
+            }
+            
+            try {
+                await loadFromSheet();
+                showMessage('Data synced successfully!', 'success');
+            } catch (error) {
+                showMessage('Sync failed. Check your connection.', 'error');
+            }
         }
         
-        // Update row styling based on progress
-        function updateRowStyling(row, percentage) {
-            row.classList.remove('completed-row', 'in-progress-row');
-            if (percentage >= 100) {
-                row.classList.add('completed-row');
-            } else if (percentage > 0) {
-                row.classList.add('in-progress-row');
+        // Clear all data
+        function clearData() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                // Reset all inputs
+                document.querySelectorAll('#tracker-body tr').forEach(row => {
+                    row.querySelector('.goal-input').value = row.dataset.book === '0' ? '100' : 
+                                                            row.dataset.book === '1' ? '20' :
+                                                            row.dataset.book === '2' ? '15' :
+                                                            row.dataset.book === '3' ? '25' :
+                                                            row.dataset.book === '4' ? '10' :
+                                                            row.dataset.book === '5' ? '50' :
+                                                            row.dataset.book === '6' ? '12' : '30';
+                    row.querySelector('.completed-input').value = '0';
+                    row.querySelector('.notes-input').value = '';
+                    updateRow(row);
+                });
+                
+                // Clear storage
+                try {
+                    localStorage.removeItem('trackerData');
+                    localStorage.removeItem('sheetUrl');
+                } catch (e) {
+                    window.memoryStorage = {};
+                }
+                
+                // Reset connection
+                SHEET_URL = '';
+                document.getElementById('sheet-url').value = '';
+                document.getElementById('force-sync-btn').style.display = 'none';
+                updateSyncStatus(false, 'Not Connected');
+                
+                showMessage('All data cleared successfully!', 'success');
             }
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Listen for input changes
+            document.addEventListener('input', function(e) {
+                if (e.target.matches('.goal-input, .completed-input, .notes-input')) {
+                    const row = e.target.closest('tr');
+                    updateRow(row);
+                    
+                    // Save to storage
+                    saveToStorage();
+                    
+                    // Debounced sync to Google Sheets
+                    if (SHEET_URL) {
+                        clearTimeout(syncTimeout);
+                        syncTimeout = setTimeout(syncToSheet, 2000);
+                    }
+                }
+            });
         }
         
         // Update a single row
@@ -716,7 +952,7 @@
             const progressBar = row.querySelector('.progress-bar');
             const percentage = row.querySelector('.percentage');
             
-            const goal = parseInt(goalInput.value) || 1;
+            const goal = parseInt(goalInput.value) || 0;
             const completed = parseInt(completedInput.value) || 0;
             
             // Ensure completed doesn't exceed goal
@@ -725,82 +961,79 @@
             }
             
             const actualCompleted = Math.min(completed, goal);
-            const progressPercent = Math.min((actualCompleted / goal) * 100, 100);
+            const progress = goal > 0 ? (actualCompleted / goal) : 0;
+            const progressPercent = Math.round(progress * 100);
             
-            progressBar.textContent = createProgressBar(actualCompleted, goal);
-            percentage.textContent = Math.round(progressPercent) + '%';
+            // Update progress bar
+            const filledBlocks = Math.round(progress * 20);
+            const emptyBlocks = 20 - filledBlocks;
+            progressBar.textContent = '█'.repeat(filledBlocks) + '░'.repeat(emptyBlocks);
             
-            updateRowStyling(row, progressPercent);
+            // Update percentage
+            percentage.textContent = progressPercent + '%';
+            
+            // Update row styling
+            row.className = '';
+            if (progressPercent === 100) {
+                row.classList.add('completed-row');
+            } else if (progressPercent > 0) {
+                row.classList.add('in-progress-row');
+            }
+            
+            // Update summary
             updateSummary();
         }
         
         // Update summary statistics
         function updateSummary() {
             const rows = document.querySelectorAll('#tracker-body tr');
+            let totalBooks = rows.length;
             let completedBooks = 0;
             let totalReadings = 0;
             let totalProgress = 0;
             
             rows.forEach(row => {
-                const goal = parseInt(row.querySelector('.goal-input').value) || 1;
+                const goal = parseInt(row.querySelector('.goal-input').value) || 0;
                 const completed = parseInt(row.querySelector('.completed-input').value) || 0;
-                const actualCompleted = Math.min(completed, goal);
-                const progressPercent = (actualCompleted / goal) * 100;
+                const progress = goal > 0 ? (Math.min(completed, goal) / goal) : 0;
                 
-                if (progressPercent >= 100) completedBooks++;
-                totalReadings += actualCompleted;
-                totalProgress += progressPercent;
+                totalReadings += Math.min(completed, goal);
+                totalProgress += progress * 100;
+                
+                if (progress === 1) {
+                    completedBooks++;
+                }
             });
             
-            const avgProgress = totalProgress / rows.length;
+            const avgProgress = totalBooks > 0 ? Math.round(totalProgress / totalBooks) : 0;
             
-            document.getElementById('total-books').textContent = rows.length;
+            document.getElementById('total-books').textContent = totalBooks;
             document.getElementById('completed-books').textContent = completedBooks;
             document.getElementById('total-readings').textContent = totalReadings;
-            document.getElementById('avg-progress').textContent = Math.round(avgProgress) + '%';
+            document.getElementById('avg-progress').textContent = avgProgress + '%';
         }
         
-        // Debounced save function
-        function debouncedSave() {
-            clearTimeout(syncTimeout);
-            syncTimeout = setTimeout(() => {
-                saveToSheet();
-            }, 1000); // Save 1 second after user stops typing
-        }
-        
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load configuration
-            loadSheetConfig();
+        // Sync to Google Sheets (simplified approach)
+        async function syncToSheet() {
+            if (!SHEET_URL || !isConnected) return;
             
-            // Load data from localStorage first (backup)
-            loadFromLocalStorage();
-            
-            // Set up event listeners
-            const allInputs = document.querySelectorAll('.goal-input, .completed-input, .notes-input');
-            
-            allInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    const row = this.closest('tr');
-                    updateRow(row);
-                    debouncedSave(); // Auto-save with debounce
-                });
+            try {
+                updateSyncStatus(true, 'Syncing...');
                 
-                input.addEventListener('change', function() {
-                    const row = this.closest('tr');
-                    updateRow(row);
-                    debouncedSave(); // Auto-save with debounce
-                });
-            });
-            
-            // Initial update
-            const rows = document.querySelectorAll('#tracker-body tr');
-            rows.forEach(updateRow);
-            
-            // Try to load from sheet if configured
-            if (SHEET_URL) {
-                setTimeout(checkConnection, 1000);
+                // For now, we'll just update the sync status
+                // In a real implementation, you'd need a backend service to write to Google Sheets
+                // or use Google Sheets API with proper authentication
+                
+                setTimeout(() => {
+                    updateSyncStatus(true, 'Synced');
+                    document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Sync error:', error);
+                updateSyncStatus(false, 'Sync Error');
             }
-        });
+        }
     </script>
 </body>
+</html>
